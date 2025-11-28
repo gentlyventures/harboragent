@@ -1,0 +1,59 @@
+# path: packs/genesis/schemas/readiness.yaml
+
+version: "0.1"
+organization:
+  name: ""
+  contact:
+    email: ""
+    technical_lead: ""
+
+readiness_summary:
+  overall_score: ""
+  critical_coverage: ""
+  important_coverage: ""
+  optional_coverage: ""
+  top_gaps:
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+
+domains:
+  data:
+    score: ""
+    notes: ""
+  models:
+    score: ""
+    notes: ""
+  infrastructure:
+    score: ""
+    notes: ""
+  security_governance:
+    score: ""
+    notes: ""
+  documentation:
+    score: ""
+    notes: ""
+
+next_steps:
+  days_30:
+    - ""
+    - ""
+    - ""
+  days_60:
+    - ""
+    - ""
+    - ""
+  days_90:
+    - ""
+    - ""
+    - ""
+
+attachments:
+  architecture_diagram: ""
+  data_flows: ""
+  governance_binder: ""
+  model_cards: ""
+  dataset_metadata: ""
+

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Genesis Metadata Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the dataset, model, or pipeline."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version ID for the artifact."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["dataset", "model", "pipeline"],
+      "description": "Type of artifact."
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what this artifact contains or does."
+    },
+    "classification": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted"],
+      "description": "Data classification level."
+    },
+    "source": {
+      "type": "string",
+      "description": "Source of the data or model (sensor, simulation, historical record, pipeline, etc.)."
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "created_by": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "transformations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "formats": {
+      "type": "array",
+      "description": "Supported export formats (datasets).",
+      "items": { "type": "string" }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Optional performance or quality metrics.",
+      "additionalProperties": true
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Dependencies used for training or generation.",
+      "items": { "type": "string" }
+    },
+    "logs": {
+      "type": "string",
+      "description": "Location of logs for this artifact (e.g., URL or path)."
+    }
+  },
+  "required": ["name", "version", "type"]
+}
+

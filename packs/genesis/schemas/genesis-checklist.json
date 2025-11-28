@@ -1,0 +1,239 @@
+{
+  "version": "0.1",
+  "name": "Genesis Readiness Checklist",
+  "domains": {
+    "data": [
+      {
+        "id": "data_schema",
+        "item": "Structured Data Schemas",
+        "description": "Datasets have well-defined schemas describing fields, types, and constraints.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_metadata",
+        "item": "Consistent Metadata",
+        "description": "Metadata follows a standardized, consistent structure.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_provenance",
+        "item": "Data Provenance Tracking",
+        "description": "Lineage information (source, transformations, timestamps) is tracked.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_versioning",
+        "item": "Dataset Versioning",
+        "description": "Automated dataset versioning exists across major datasets.",
+        "priority": "important"
+      },
+      {
+        "id": "data_quality",
+        "item": "Dataset Quality Scoring",
+        "description": "Quality metrics exist and are documented.",
+        "priority": "important"
+      },
+      {
+        "id": "data_formats",
+        "item": "Exportability",
+        "description": "Datasets export in JSON, CSV, Parquet, or HDF5.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_classification",
+        "item": "Data Classification Framework",
+        "description": "Data classification levels and handling rules are defined.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_access_controls",
+        "item": "Access Controls",
+        "description": "Access policies exist for read/write/scoped access.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_retention",
+        "item": "Data Retention Policy",
+        "description": "Retention and archival policies are documented.",
+        "priority": "optional"
+      }
+    ],
+    "models": [
+      {
+        "id": "model_catalog",
+        "item": "Model Inventory",
+        "description": "All relevant models are documented with metadata.",
+        "priority": "critical"
+      },
+      {
+        "id": "model_reproducibility",
+        "item": "Deterministic Inference",
+        "description": "Inference can run in deterministic or reproducible mode.",
+        "priority": "important"
+      },
+      {
+        "id": "model_training_logs",
+        "item": "Training Logs",
+        "description": "Training scripts produce versioned logs.",
+        "priority": "critical"
+      },
+      {
+        "id": "model_dependencies",
+        "item": "Dependency Pinning",
+        "description": "All ML dependencies are pinned.",
+        "priority": "critical"
+      },
+      {
+        "id": "model_cards",
+        "item": "Model Cards",
+        "description": "Model cards exist for each model.",
+        "priority": "critical"
+      },
+      {
+        "id": "model_explainability",
+        "item": "Explainability",
+        "description": "Feature-level explanations exist when applicable.",
+        "priority": "optional"
+      },
+      {
+        "id": "model_export",
+        "item": "Model Exportability",
+        "description": "Models export to ONNX or containerized bundles.",
+        "priority": "important"
+      },
+      {
+        "id": "model_benchmarking",
+        "item": "Benchmark Suite",
+        "description": "Models have reproducible performance benchmarks.",
+        "priority": "important"
+      }
+    ],
+    "infrastructure": [
+      {
+        "id": "infra_containers",
+        "item": "Containerized Pipelines",
+        "description": "All pipelines are packaged in Docker or Singularity.",
+        "priority": "critical"
+      },
+      {
+        "id": "infra_cicd",
+        "item": "CI/CD Automation",
+        "description": "CI/CD exists for testing and deployment.",
+        "priority": "important"
+      },
+      {
+        "id": "infra_isolation",
+        "item": "Isolated Inference",
+        "description": "Inference workloads run in isolated, secure environments.",
+        "priority": "critical"
+      },
+      {
+        "id": "infra_api_docs",
+        "item": "API Documentation",
+        "description": "APIs are documented (REST/gRPC).",
+        "priority": "important"
+      },
+      {
+        "id": "infra_schema_mapping",
+        "item": "Schema Mapping",
+        "description": "Internal formats map to external submission formats.",
+        "priority": "important"
+      },
+      {
+        "id": "infra_hpc",
+        "item": "HPC Integration",
+        "description": "Workflows can integrate with HPC-like systems.",
+        "priority": "optional"
+      },
+      {
+        "id": "infra_compatibility",
+        "item": "Workflow Portability",
+        "description": "Workflows are portable to orchestrators (Airflow, Nextflow, etc.).",
+        "priority": "important"
+      }
+    ],
+    "security_governance": [
+      {
+        "id": "sec_secrets",
+        "item": "Secrets Management",
+        "description": "Secrets stored securely (Vault/KMS).",
+        "priority": "critical"
+      },
+      {
+        "id": "sec_audit",
+        "item": "Audit Trails",
+        "description": "Access and change logs retained.",
+        "priority": "critical"
+      },
+      {
+        "id": "sec_encryption",
+        "item": "Encryption",
+        "description": "Encryption in transit and at rest is applied.",
+        "priority": "critical"
+      },
+      {
+        "id": "sec_network",
+        "item": "Network Segmentation",
+        "description": "Sensitive systems isolated in network topology.",
+        "priority": "critical"
+      },
+      {
+        "id": "sec_nist_alignment",
+        "item": "NIST AI RMF Alignment",
+        "description": "Processes mapped to NIST AI RMF principles.",
+        "priority": "important"
+      },
+      {
+        "id": "sec_submission",
+        "item": "Secure Submission Bundles",
+        "description": "Artifacts hashed/signed for integrity.",
+        "priority": "important"
+      },
+      {
+        "id": "sec_drift",
+        "item": "Drift Monitoring",
+        "description": "Capability to detect model/data drift.",
+        "priority": "optional"
+      }
+    ],
+    "documentation": [
+      {
+        "id": "doc_architecture",
+        "item": "Architecture Diagram",
+        "description": "Updated architecture diagram exists.",
+        "priority": "critical"
+      },
+      {
+        "id": "doc_data_flow",
+        "item": "Data Flow Documentation",
+        "description": "Upstream/downstream flows documented.",
+        "priority": "critical"
+      },
+      {
+        "id": "doc_change_mgmt",
+        "item": "Change Management",
+        "description": "Versioning and approvals documented.",
+        "priority": "important"
+      },
+      {
+        "id": "doc_sops",
+        "item": "Standard Operating Procedures",
+        "description": "SOPs exist for major workflows.",
+        "priority": "important"
+      },
+      {
+        "id": "doc_governance_binder",
+        "item": "Governance Binder",
+        "description": "Central governance documentation.",
+        "priority": "important"
+      },
+      {
+        "id": "doc_readiness_statement",
+        "item": "Genesis Readiness Statement",
+        "description": "Internal Genesis readiness memo drafted.",
+        "priority": "optional"
+      }
+    ]
+  }
+}
+
