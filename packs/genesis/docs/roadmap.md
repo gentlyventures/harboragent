@@ -26,7 +26,7 @@ Before starting:
 
 - Create a Genesis workspace in the internal knowledge system.  
 
-- Import the Harbor Agent Genesis Pack into internal version control.  
+- Import the Harbor Agent — Genesis Mission Readiness Pack into internal version control.  
 
 - Ensure relevant teams have access to the repository and docs.  
 

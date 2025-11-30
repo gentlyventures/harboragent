@@ -1,6 +1,6 @@
-# Genesis Pack Delivery System
+# Genesis Mission Readiness Pack Delivery System
 
-This document describes the secure delivery system for the Harbor Agent Genesis Pack, including how to configure environment variables, deploy the Cloudflare Worker, and test the system.
+This document describes the secure delivery system for the Harbor Agent — Genesis Mission Readiness Pack, including how to configure environment variables, deploy the Cloudflare Worker, and test the system.
 
 ## Architecture Overview
 

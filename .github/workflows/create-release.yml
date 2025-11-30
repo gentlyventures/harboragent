@@ -1,0 +1,61 @@
+name: Create Release
+
+# DISABLED: GitHub Actions not in use - using manual releases instead
+# To re-enable: Remove the 'if: false' condition below
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        type: string
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    if: false  # DISABLED - GitHub Actions not in use
+    runs-on: ubuntu-latest
+    name: Create Release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from tag or input
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare release asset
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          # Use the existing zip file if it matches the version
+          if [ -f "dist/harbor-agent-genesis-pack-${VERSION}.zip" ]; then
+            cp "dist/harbor-agent-genesis-pack-${VERSION}.zip" "harbor-agent-genesis-pack-${VERSION}.zip"
+          elif [ -f "dist/harbor-agent-genesis-pack-v1.0.zip" ]; then
+            # Fallback to v1.0 if version-specific doesn't exist
+            cp "dist/harbor-agent-genesis-pack-v1.0.zip" "harbor-agent-genesis-pack-${VERSION}.zip"
+          else
+            echo "Error: No pack file found in dist/ for version ${VERSION}"
+            echo "Available files:"
+            ls -la dist/*.zip || echo "No zip files in dist/"
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: Harbor Agent Genesis Pack ${{ steps.version.outputs.version }}
+          files: |
+            harbor-agent-genesis-pack-${{ steps.version.outputs.version }}.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

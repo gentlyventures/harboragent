@@ -1,11 +1,26 @@
-# READTHISFIRST — Harbor Agent: Genesis Readiness Pack (v0.1)
+# READTHISFIRST — Harbor Agent: Genesis Mission Readiness Pack (v0.1)
 
-Welcome to the **Harbor Agent – Genesis Readiness Pack**.  
+> Harbor Agent is a product line from Gently Ventures. Each Harbor Agent Pack focuses on a
+> specific initiative or framework. This repository and pack are specifically for the
+> **Harbor Agent — Genesis Mission Readiness Pack (Pack #1)**.
+
+Harbor Agent is a product line from Gently Ventures.
+
+Each Harbor Agent Pack is a focused, AI-native compliance and readiness co-pack for a specific government or industry initiative. We translate large, ambiguous initiatives into developer-ready artifacts and AI-native workflows that engineering, ML, and security teams can actually use.
+
+The **Harbor Agent — Genesis Mission Readiness Pack** is Pack #1 in the Harbor Agent line.
+
+It helps engineering, ML, and security teams prepare for credible collaboration under the U.S. Department of Energy's Genesis Mission by providing readiness checklists, governance and documentation templates, AI copilot playbooks (Cursor, GitHub Copilot, Claude Code, etc.), proposal and internal communication templates, and automation and audit scripts.
+
+Welcome to the **Harbor Agent — Genesis Mission Readiness Pack**.  
 This repository provides an AI-native, engineering-focused readiness framework for organizations preparing for potential collaboration under the U.S. Department of Energy's **Genesis Mission**.
 
 This pack is **NOT** a regulatory document.  
 It is **NOT** legal advice.  
-It does **NOT** represent DOE requirements.
+It does **NOT** represent DOE requirements.  
+It is **NOT** an official DOE or government document.
+
+It is an engineering-focused readiness toolkit based on publicly available information.
 
 Instead, it is a practical toolkit that helps engineering, ML, security, and product teams:
 
@@ -166,13 +181,15 @@ This prevents AI tools from hallucinating requirements or making unsafe changes.
 The free material in this repo is open for personal and internal use.  
 For the full pack (including all templates, schemas, playbooks, and internal artifacts), visit:
 
-https://gentlyventures.com/harbor-agent/genesis
+https://gentlyventures.com/products/harbor-agent
 
 ---
 
 # 5. Questions or Help?
 
-Email: support@gentlyventures.com  
+Harbor Agent site: https://harboragent.dev
 
-Website: https://gentlyventures.com/harbor-agent  
+Gently Ventures product page: https://gentlyventures.com/products/harbor-agent
+
+Email: support@gentlyventures.com  
 

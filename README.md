@@ -1,13 +1,25 @@
-# Harbor Agent — Genesis Readiness Pack (v0.1)
+# Harbor Agent — Genesis Mission Readiness Pack (v0.1)
 
 **AI-Native Engineering Alignment for DOE's Genesis Mission**  
 Created by **Gently Ventures**
 
-This repository contains the **free, open-source portion** of the Harbor Agent Genesis Pack, designed to help engineering, ML, security, and compliance teams prepare for credible collaboration under the U.S. Department of Energy's **Genesis Mission**.
+> Harbor Agent is a product line from Gently Ventures. Each Harbor Agent Pack focuses on a
+> specific initiative or framework. This repository contains the free, open-source portion
+> of the **Harbor Agent — Genesis Mission Readiness Pack (Pack #1)**.
 
-⚠️ This pack is **not** legal advice, **not** regulatory guidance, and **not** an official DOE document.  
+Harbor Agent is a product line from Gently Ventures.
 
-It is a technical readiness framework based on publicly available DOE/White House information.
+Each Harbor Agent Pack is a focused, AI-native compliance and readiness co-pack for a specific government or industry initiative. We translate large, ambiguous initiatives into developer-ready artifacts and AI-native workflows that engineering, ML, and security teams can actually use.
+
+The **Harbor Agent — Genesis Mission Readiness Pack** is Pack #1 in the Harbor Agent line.
+
+It helps engineering, ML, and security teams prepare for credible collaboration under the U.S. Department of Energy's Genesis Mission by providing readiness checklists, governance and documentation templates, AI copilot playbooks (Cursor, GitHub Copilot, Claude Code, etc.), proposal and internal communication templates, and automation and audit scripts.
+
+This repository contains the **free, open-source portion** of the Harbor Agent — Genesis Mission Readiness Pack.
+
+⚠️ This pack is **not** legal advice, **not** regulatory guidance, and **not** an official DOE or government document.  
+
+It is an engineering-focused readiness toolkit based on publicly available information.
 
 ---
 
@@ -51,7 +63,7 @@ This lets you:
 
 # 🔒 Want the Full Pack?
 
-The full **Genesis Professional Pack** includes:
+The full **Genesis Mission Readiness Professional Pack** includes:
 
 - Full 80–120 item checklist  
 
@@ -77,7 +89,7 @@ The full **Genesis Professional Pack** includes:
 
 👉 **Get the full pack:**  
 
-🚀 [Harbor Agent Genesis Pro Pack](https://gentlyventures.com/harbor-agent)
+🚀 [Harbor Agent Genesis Mission Pro Pack](https://gentlyventures.com/products/harbor-agent)
 
 Includes editable templates, full checklists, audit scripts, and rollout tooling for organizational adoption.
 
@@ -180,7 +192,9 @@ This pack is compatible with:
 
 # 🙋‍♂️ Contact & Support
 
-Website: https://gentlyventures.com/harbor-agent  
+Harbor Agent site: https://harboragent.dev
+
+Gently Ventures product page: https://gentlyventures.com/products/harbor-agent
 
 Support: support@gentlyventures.com  
 

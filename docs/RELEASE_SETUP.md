@@ -1,6 +1,6 @@
 # Release Setup - GitHub Releases
 
-The Genesis Pack files are hosted on GitHub Releases for free, secure distribution.
+The Genesis Mission Readiness Pack files are hosted on GitHub Releases for free, secure distribution.
 
 ## Current Release
 
@@ -19,7 +19,7 @@ This is the `DOWNLOAD_ORIGIN_URL` value to use in your Worker secrets.
 2. Go to: https://github.com/gentlyventures/harboragent/releases
 3. Click "Draft a new release"
 4. Tag: `v1.1.0` (or your version)
-5. Title: "Harbor Agent Genesis Pack v1.1.0"
+5. Title: "Harbor Agent — Genesis Mission Readiness Pack v1.1.0"
 6. Upload the zip file as an asset
 7. Publish release
 
@@ -40,7 +40,7 @@ The workflow will:
 
 ```bash
 gh release create v1.1.0 dist/harbor-agent-genesis-pack-v1.1.0.zip \
-  --title "Harbor Agent Genesis Pack v1.1.0" \
+  --title "Harbor Agent — Genesis Mission Readiness Pack v1.1.0" \
   --notes "Release notes here"
 ```
 
