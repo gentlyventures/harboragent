@@ -1,6 +1,8 @@
 /**
  * Cloudflare Worker for personalized Genesis Pack downloads
  * Handles Stripe checkout session verification and secure download delivery
+ * 
+ * Deployment: Automated via GitHub Actions on push to main
  */
 
 export interface Env {
