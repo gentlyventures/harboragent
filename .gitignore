@@ -1,22 +1,61 @@
+# Build artifacts
 dist/
+dist-frontend/
 *.zip
-/private_source/
+*.log
+.vite/
+.wrangler/
 
 # Environment variables
 .env
 .env.*
 !.env.example
+env.template
 
-# Node modules and build artifacts
+# Node modules
 node_modules/
-.wrangler/
-dist/
-*.log
 
-# Frontend build artifacts
-.vite/
-dist-frontend/
+# Private source files
+/private_source/
+
+# Frontend application (not part of the pack)
+/src/
+/index.html
+/package.json
+/package-lock.json
+/postcss.config.js
+/tailwind.config.js
+/tsconfig.json
+/tsconfig.node.json
+/vite.config.ts
+
+# Internal scripts and tools
+/scripts/
+/tools/
+/create_paid_pack_files.py
+/extract_docx.py
+/parse_paid_pack.py
+/cleanup_public_repo.sh
+
+# Internal configuration
+/config/
+/wrangler.toml
+
+# Internal documentation (keep only user-facing docs)
+/docs/
+!/docs/GENESIS_PACK_DELIVERY.md
+!/docs/RELEASE_SETUP.md
+!/docs/CLOUDFLARE_API_TOKEN_SETUP.md
+
+# Internal audit and summary files
+/FIDELITY_AUDIT_SUMMARY.md
+/FRONTEND_README.md
+/SECRETS_SETUP_SUMMARY.md
+/REPO_PUBLIC_AUDIT.md
 
 # OS files
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+*~
