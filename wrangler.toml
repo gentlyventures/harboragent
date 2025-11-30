@@ -6,9 +6,9 @@ compatibility_date = "2024-01-01"
 # Get it from: https://dash.cloudflare.com/ -> Right sidebar -> Account ID
 account_id = "1e3a745b2bf8490fc60ea23c480dc530"
 
-# Routes: Using default workers.dev subdomain
-# To use a custom domain, uncomment and configure:
-# route = { pattern = "download.harboragent.dev/*", zone_name = "harboragent.dev" }
+# Routes: Custom domain for download worker
+# Using custom domain for secure downloads
+route = { pattern = "download.harboragent.dev/*", zone_name = "harboragent.dev" }
 
 # Environment variables that MUST be set via `wrangler secret put`
 # These are NOT set here for security reasons

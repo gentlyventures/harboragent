@@ -6,6 +6,7 @@ export default function Success() {
   const [isVerifying, setIsVerifying] = useState(true)
   const [isValid, setIsValid] = useState(false)
   const sessionId = searchParams.get('session_id')
+  const workerUrl = import.meta.env.VITE_WORKER_URL || 'https://download.harboragent.dev'
 
   useEffect(() => {
     const verifySession = async () => {
@@ -16,7 +17,6 @@ export default function Success() {
       }
 
       try {
-        const workerUrl = import.meta.env.VITE_WORKER_URL || 'https://harboragent-personalized-download.dave-1e3.workers.dev'
         const response = await fetch(`${workerUrl}/verify-session`, {
           method: 'POST',
           headers: {
@@ -108,7 +108,7 @@ export default function Success() {
             </p>
             {sessionId && (
               <a
-                href={`https://harboragent-personalized-download.dave-1e3.workers.dev/download?session_id=${sessionId}`}
+                href={`${workerUrl}/download?session_id=${sessionId}`}
                 className="btn-primary text-lg px-8 py-4 inline-block"
               >
                 Download Professional Pack
