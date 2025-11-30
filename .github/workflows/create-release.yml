@@ -1,5 +1,7 @@
 name: Create Release
 
+# DISABLED: GitHub Actions not in use - using manual releases instead
+# To re-enable: Remove the 'if: false' condition below
 on:
   workflow_dispatch:
     inputs:
@@ -13,6 +15,7 @@ on:
 
 jobs:
   release:
+    if: false  # DISABLED - GitHub Actions not in use
     runs-on: ubuntu-latest
     name: Create Release
     steps:

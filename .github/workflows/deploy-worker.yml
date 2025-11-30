@@ -1,5 +1,7 @@
 name: Deploy Cloudflare Worker
 
+# DISABLED: GitHub Actions not in use - using manual deployment instead
+# To re-enable: Remove the 'if: false' condition below
 on:
   push:
     branches:
@@ -12,6 +14,7 @@ on:
 
 jobs:
   deploy:
+    if: false  # DISABLED - GitHub Actions not in use
     runs-on: ubuntu-latest
     name: Deploy Worker
     steps:
