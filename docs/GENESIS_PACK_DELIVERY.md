@@ -29,7 +29,9 @@ The delivery system consists of:
 These secrets are stored in Cloudflare and accessed by the Worker at runtime:
 
 - `STRIPE_SECRET_KEY`: Stripe API secret key (starts with `sk_`)
-- `DOWNLOAD_ORIGIN_URL`: URL where pack files are hosted
+- `DOWNLOAD_ORIGIN_URL`: URL where pack files are hosted (GitHub Releases)
+  - Current: `https://github.com/gentlyventures/harboragent/releases/download/v1.0.0/harbor-agent-genesis-pack-v1.0.zip`
+  - See `docs/RELEASE_SETUP.md` for creating new releases
 - `GENESIS_PACK_PRICE_ID`: (Optional) Stripe Price ID for the product
 
 **How to set Wrangler secrets:**
