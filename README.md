@@ -87,25 +87,7 @@ https://harboragent.dev
 
 ---
 
-# 🚀 Secure Download System
-
-This repository includes a **Cloudflare Worker** that handles secure, verified downloads of the Genesis Professional Pack:
-
-- **Worker URL:** `https://harboragent-personalized-download.dave-1e3.workers.dev`
-- **Verifies Stripe checkout sessions** before allowing downloads
-- **Serves files from GitHub Releases** (v1.0.0 available now)
-- **Fully automated deployment** via GitHub Actions
-
-**Architecture:**
-- Customer completes Stripe checkout → Receives session ID
-- Customer visits Worker `/download?session_id=...` endpoint
-- Worker verifies payment with Stripe API
-- If valid, redirects to secure GitHub Releases download
-
-**Documentation:**
-- Worker code: `workers/personalized-download/src/index.ts`
-- Deployment guide: `docs/GENESIS_PACK_DELIVERY.md`
-- Release setup: `docs/RELEASE_SETUP.md`
+> **For developers/maintainers:** Technical documentation for the secure download system, Worker deployment, and infrastructure setup is available in the `/docs` directory. See `docs/GENESIS_PACK_DELIVERY.md` for details.
 
 ---
 
