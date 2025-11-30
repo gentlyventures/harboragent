@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 export default function Hero() {
   return (
     <section className="relative bg-gradient-to-br from-primary-50 via-white to-accent-50 overflow-hidden">

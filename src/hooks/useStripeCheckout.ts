@@ -3,7 +3,6 @@ import { loadStripe } from '@stripe/stripe-js'
 
 const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || ''
 const STRIPE_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID || ''
-const WORKER_URL = import.meta.env.VITE_WORKER_URL || 'https://harboragent-personalized-download.dave-1e3.workers.dev'
 
 export function useStripeCheckout() {
   const [isLoading, setIsLoading] = useState(false)
