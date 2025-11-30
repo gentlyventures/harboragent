@@ -1,0 +1,42 @@
+{
+  "official_terms": {
+    "program_name": "Genesis Mission",
+    "agency": "U.S. Department of Energy (DOE)",
+    "short_agency": "DOE"
+  },
+  "forbidden_phrases": [
+    "guarantees compliance",
+    "fully compliant with genesis",
+    "fully compliant with the genesis mission",
+    "certified compliant",
+    "officially approved by the department of energy",
+    "officially approved by doe",
+    "endorsed by the department of energy",
+    "endorsed by doe",
+    "official genesis toolkit",
+    "official compliance toolkit",
+    "meets all regulatory obligations",
+    "ensures legal compliance",
+    "ensures regulatory compliance"
+  ],
+  "project_name_misuses": [
+    "Project Genesis",
+    "project genesis",
+    "DOE Genesis Project"
+  ],
+  "required_disclaimer": "This toolkit is an independent, third-party resource provided by Gently Ventures / Harbor Agent. It is not affiliated with, endorsed by, or sponsored by the U.S. Department of Energy (DOE), the Genesis Mission, or any other U.S. government entity. It is for informational and internal readiness purposes only and does not constitute legal advice or a guarantee of regulatory compliance.",
+  "files_requiring_disclaimer": [
+    "dist/paid-pack/README.md",
+    "dist/paid-pack/LICENSE-HARBOR-AGENT.md",
+    "dist/paid-pack/governance-binder/compliance-readiness.md",
+    "dist/paid-pack/rollout/org-rollout-guide.md"
+  ],
+  "scan_root": "dist/paid-pack",
+  "scan_extensions": [
+    ".md",
+    ".py",
+    ".yml",
+    ".yaml"
+  ]
+}
+

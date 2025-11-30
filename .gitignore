@@ -13,6 +13,10 @@ node_modules/
 dist/
 *.log
 
+# Frontend build artifacts
+.vite/
+dist-frontend/
+
 # OS files
 .DS_Store
 Thumbs.db
