@@ -12,21 +12,30 @@ After bringing `harboragent.dev` into Cloudflare, you need to:
 
 ## Step 1: Connect Domain to Cloudflare Pages
 
-### Via Cloudflare Dashboard
+Since the domain is already in Cloudflare, you need to update DNS records manually. Your Pages project URL is: `harbor-agent.pages.dev`
 
-1. Go to: https://dash.cloudflare.com/ → **Workers & Pages**
-2. Click on your **harbor-agent** project
-3. Go to **Custom domains** tab
-4. Click **Set up a custom domain**
-5. Enter: `harboragent.dev`
-6. Click **Continue**
-7. Cloudflare will automatically configure DNS records
+### Update the A Record for harboragent.dev
 
-### DNS Records Created
+1. Go to: https://dash.cloudflare.com/ → Select `harboragent.dev` → **DNS** → **Records**
+2. Find the **A record** for `harboragent.dev` (currently pointing to `185.158.133.1`)
+3. Click **Edit** on that A record
+4. You have two options:
 
-Cloudflare Pages will automatically create:
-- **CNAME** record: `harboragent.dev` → `harbor-agent.pages.dev`
-- Or **A/AAAA** records if using apex domain
+   **Option A: Use CNAME Flattening (Easiest)**
+   - Delete the A record
+   - Add a new **CNAME** record:
+     - **Type**: CNAME
+     - **Name**: `@` or `harboragent.dev` (apex)
+     - **Target**: `harbor-agent.pages.dev`
+     - **Proxy status**: Proxied (orange cloud) ✅
+   - Cloudflare will automatically flatten the CNAME to work with apex domains
+
+   **Option B: Keep A Record (If CNAME not supported)**
+   - Change the **Content** from `185.158.133.1` to Cloudflare Pages IP
+   - Get the IP from: **Workers & Pages** → **harbor-agent** → Check project details
+   - Or use Cloudflare's Pages IPs (they provide these in the project settings)
+
+**Recommended**: Use Option A (CNAME with flattening) - it's simpler and Cloudflare handles it automatically.
 
 ## Step 2: Configure Worker Subdomain
 
