@@ -75,9 +75,11 @@ The full **Genesis Professional Pack** includes:
 
 - Enterprise documentation templates  
 
-👉 **Buy the full pack here:**  
+👉 **Get the full pack:**  
 
-https://gentlyventures.com/harbor-agent/genesis
+🚀 [Harbor Agent Genesis Pro Pack](https://gentlyventures.com/harbor-agent)
+
+Includes editable templates, full checklists, audit scripts, and rollout tooling for organizational adoption.
 
 Or visit the product site:  
 
