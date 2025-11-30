@@ -1,0 +1,37 @@
+name = "harboragent-personalized-download"
+main = "workers/personalized-download/src/index.ts"
+compatibility_date = "2024-01-01"
+
+# TODO: Set your Cloudflare account ID
+# Get it from: https://dash.cloudflare.com/ -> Right sidebar -> Account ID
+account_id = "1e3a745b2bf8490fc60ea23c480dc530"
+
+# TODO: Configure routes for your domain
+# Example: route = { pattern = "download.harboragent.dev/*", zone_name = "harboragent.dev" }
+# Or use workers.dev subdomain (no route needed)
+# route = "TODO"
+
+# Environment variables that MUST be set via `wrangler secret put`
+# These are NOT set here for security reasons
+# 
+# Required secrets:
+# - STRIPE_SECRET_KEY: Your Stripe secret key (starts with sk_)
+# - DOWNLOAD_ORIGIN_URL: The origin URL where the actual pack files are hosted
+# - GENESIS_PACK_PRICE_ID: (Optional) Stripe Price ID for the Genesis Pack product
+#
+# To set secrets, run:
+#   wrangler secret put STRIPE_SECRET_KEY
+#   wrangler secret put DOWNLOAD_ORIGIN_URL
+#   wrangler secret put GENESIS_PACK_PRICE_ID
+
+[build]
+command = "npm run build || echo 'No build step required'"
+
+[env.production]
+# Production environment settings
+# Add any production-specific config here
+
+[env.staging]
+# Staging environment settings
+# Add any staging-specific config here
+

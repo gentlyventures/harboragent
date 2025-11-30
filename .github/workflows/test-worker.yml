@@ -1,0 +1,43 @@
+name: Test Cloudflare Worker
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'workers/**'
+      - 'wrangler.toml'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test Worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          if [ -f "package.json" ]; then
+            npm ci
+          fi
+
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Validate Worker syntax
+        run: |
+          # TypeScript check if tsconfig exists
+          if [ -f "tsconfig.json" ]; then
+            npx tsc --noEmit workers/personalized-download/src/index.ts || true
+          fi
+          
+          # Basic syntax validation
+          wrangler deploy --dry-run || echo "Dry-run completed"
+

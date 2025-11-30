@@ -1,3 +1,18 @@
 dist/
 *.zip
 /private_source/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Node modules and build artifacts
+node_modules/
+.wrangler/
+dist/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
