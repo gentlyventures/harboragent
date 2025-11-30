@@ -1,4 +1,7 @@
-# GitHub Actions Deployment Guide
+# GitHub Actions Deployment Guide (Future Use)
+
+> **Note:** GitHub Actions requires payment and is not currently available.  
+> For immediate deployment, see: [Manual Frontend Deployment Guide](./MANUAL_FRONTEND_DEPLOYMENT.md)
 
 This guide explains how to deploy the Harbor Agent frontend using GitHub Actions, which bypasses Lovable's read-only file restrictions.
 
