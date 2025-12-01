@@ -206,6 +206,7 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
     const origin = new URL(request.url).origin;
     const successUrl = body.successUrl || `${origin}/success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = body.cancelUrl || `${origin}/#pricing`;
+    const couponCode = body.couponCode;
 
     if (!priceId) {
       return new Response(JSON.stringify({ error: 'Price ID is required' }), {
@@ -225,6 +226,11 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
     formData.append('cancel_url', cancelUrl);
     formData.append('line_items[0][price]', priceId);
     formData.append('line_items[0][quantity]', '1');
+    
+    // Add coupon code if provided
+    if (couponCode && couponCode.trim()) {
+      formData.append('discounts[0][coupon]', couponCode.trim());
+    }
 
     const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
