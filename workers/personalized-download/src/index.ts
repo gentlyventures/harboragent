@@ -15,14 +15,34 @@ export interface Env {
   POSTMARK_FROM_NAME: string;
 }
 
+// CORS headers helper
+function getCorsHeaders(): Record<string, string> {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: getCorsHeaders(),
+      });
+    }
+
     // Health check endpoint
     if (url.pathname === '/health') {
       return new Response(JSON.stringify({ status: 'ok' }), {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getCorsHeaders(),
+        },
       });
     }
 
@@ -190,7 +210,10 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
     if (!priceId) {
       return new Response(JSON.stringify({ error: 'Price ID is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getCorsHeaders(),
+        },
       });
     }
 
@@ -216,20 +239,29 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
       console.error('Stripe API error:', errorText);
       return new Response(JSON.stringify({ error: 'Failed to create checkout session' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...getCorsHeaders(),
+        },
       });
     }
 
     const session = await response.json();
 
     return new Response(JSON.stringify({ sessionId: session.id }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getCorsHeaders(),
+      },
     });
   } catch (error) {
     console.error('Checkout session creation error:', error);
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getCorsHeaders(),
+      },
     });
   }
 }
