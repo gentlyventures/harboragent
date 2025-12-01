@@ -41,6 +41,11 @@ export default {
       return handleWebhook(request, env);
     }
 
+    // Handle checkout session creation
+    if (url.pathname === '/create-checkout-session') {
+      return handleCreateCheckoutSession(request, env);
+    }
+
     return new Response('Not Found', { status: 404 });
   },
 };
@@ -165,6 +170,65 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
     console.error('Webhook error:', error);
     return new Response(JSON.stringify({ error: 'Webhook processing failed' }), {
       status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
+
+async function handleCreateCheckoutSession(request: Request, env: Env): Promise<Response> {
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
+
+  try {
+    const body = await request.json();
+    const priceId = body.priceId || env.GENESIS_PACK_PRICE_ID;
+    const origin = new URL(request.url).origin;
+    const successUrl = body.successUrl || `${origin}/success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = body.cancelUrl || `${origin}/#pricing`;
+
+    if (!priceId) {
+      return new Response(JSON.stringify({ error: 'Price ID is required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Create Stripe checkout session
+    const formData = new URLSearchParams();
+    formData.append('mode', 'payment');
+    formData.append('success_url', successUrl);
+    formData.append('cancel_url', cancelUrl);
+    formData.append('line_items[0][price]', priceId);
+    formData.append('line_items[0][quantity]', '1');
+
+    const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${env.STRIPE_SECRET_KEY}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formData.toString(),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Stripe API error:', errorText);
+      return new Response(JSON.stringify({ error: 'Failed to create checkout session' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const session = await response.json();
+
+    return new Response(JSON.stringify({ sessionId: session.id }), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Checkout session creation error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   }

@@ -11,7 +11,7 @@ Created by **Gently Ventures**
 
 The Genesis Mission Readiness Pack is available for a **one-time license of $199 per organization**.
 
-[→ Buy Now](https://buy.stripe.com/YOUR-LIVE-CHECKOUT-LINK)
+[→ Buy Now](https://harboragent.dev/packs/genesis-mission#pricing)
 
 Includes full compliance templates, automation scripts, proposal kits, and governance playbooks.
 
@@ -99,7 +99,7 @@ The full **Genesis Mission Readiness Professional Pack** includes:
 
 👉 **Get the full pack:**  
 
-🚀 [Buy Now for $199](https://buy.stripe.com/YOUR-LIVE-CHECKOUT-LINK)
+🚀 [Buy Now for $199](https://harboragent.dev/packs/genesis-mission#pricing)
 
 Includes editable templates, full checklists, audit scripts, and rollout tooling for organizational adoption. Licensed for use by one organization. No subscriptions. Free updates for all 2025 revisions.
 
