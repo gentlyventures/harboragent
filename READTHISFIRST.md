@@ -178,7 +178,7 @@ This prevents AI tools from hallucinating requirements or making unsafe changes.
 
 # 4. Pricing & Licensing
 
-The free material in this repo is open for personal and internal use.
+The free material in this repo is open for personal and internal use.  
 
 ## Full Pack Pricing
 
