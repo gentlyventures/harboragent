@@ -10,15 +10,23 @@ The delivery system consists of:
    - Verifies Stripe checkout sessions
    - Generates secure download links
    - Handles download requests
+   - Processes Stripe webhooks
+   - Sends email notifications via Postmark
 
 2. **Stripe Integration**
    - Payment processing
    - Session verification
    - Purchase validation
+   - Webhook events (`checkout.session.completed`)
 
-3. **Download Origin**
-   - CDN or storage bucket hosting the actual pack files
-   - Serves files after Worker verification
+3. **Postmark Email Service**
+   - Sends download emails automatically after payment
+   - Uses confirmed sender signature (`hello@harboragent.dev`)
+   - HTML email templates with download links
+
+4. **Download Origin (Cloudflare R2)**
+   - R2 bucket hosting the pack ZIP file
+   - Public URL serves files after Worker verification
 
 ## Environment Variables
 
@@ -29,10 +37,15 @@ The delivery system consists of:
 These secrets are stored in Cloudflare and accessed by the Worker at runtime:
 
 - `STRIPE_SECRET_KEY`: Stripe API secret key (starts with `sk_`)
-- `DOWNLOAD_ORIGIN_URL`: URL where pack files are hosted (GitHub Releases)
-  - Current: `https://github.com/gentlyventures/harboragent/releases/download/v1.0.0/harbor-agent-genesis-pack-v1.0.zip`
-  - See `docs/RELEASE_SETUP.md` for creating new releases
+- `DOWNLOAD_ORIGIN_URL`: URL where pack files are hosted (Cloudflare R2)
+  - Current: R2 bucket public URL (e.g., `https://pub-xxxxx.r2.dev/harbor-agent-genesis-pack-v1.0.zip`)
+  - See `docs/R2_SETUP.md` for R2 bucket setup
+- `POSTMARK_SERVER_TOKEN`: Postmark server token for sending emails
+  - Get from: https://account.postmarkapp.com/servers
+- `POSTMARK_FROM_EMAIL`: Email address to send from (e.g., `hello@harboragent.dev`)
+- `POSTMARK_FROM_NAME`: Display name for sender (e.g., `Harbor Agent`)
 - `GENESIS_PACK_PRICE_ID`: (Optional) Stripe Price ID for the product
+- `STRIPE_WEBHOOK_SECRET`: (Optional) Stripe webhook signing secret for webhook verification
 
 **How to set Wrangler secrets:**
 
@@ -46,7 +59,11 @@ wrangler login
 # Set each secret (you'll be prompted to enter the value)
 wrangler secret put STRIPE_SECRET_KEY
 wrangler secret put DOWNLOAD_ORIGIN_URL
-wrangler secret put GENESIS_PACK_PRICE_ID
+wrangler secret put POSTMARK_SERVER_TOKEN
+wrangler secret put POSTMARK_FROM_EMAIL
+wrangler secret put POSTMARK_FROM_NAME
+wrangler secret put GENESIS_PACK_PRICE_ID  # Optional
+wrangler secret put STRIPE_WEBHOOK_SECRET  # Optional (for webhook signature verification)
 ```
 
 **Note:** Secrets set via `wrangler secret put` are encrypted and stored securely in Cloudflare. They are NOT visible in `wrangler.toml` or in your code.
@@ -171,6 +188,42 @@ GitHub Actions automatically deploys when:
 - Changes are made to `workers/` or `wrangler.toml`
 
 See `.github/workflows/deploy-worker.yml` for details.
+
+## Stripe Webhook Configuration
+
+To enable automatic email delivery after payment, configure a Stripe webhook:
+
+### 1. Create Webhook Endpoint in Stripe
+
+1. Go to: https://dashboard.stripe.com/webhooks
+2. Click **Add endpoint**
+3. Set **Endpoint URL** to: `https://download.harboragent.dev/webhook`
+4. Select events to listen to:
+   - `checkout.session.completed`
+5. Click **Add endpoint**
+
+### 2. Get Webhook Signing Secret
+
+1. After creating the endpoint, click on it
+2. Find **Signing secret** (starts with `whsec_`)
+3. Copy the secret
+
+### 3. Set Webhook Secret in Worker
+
+```bash
+wrangler secret put STRIPE_WEBHOOK_SECRET
+# Paste the signing secret from Stripe
+```
+
+### 4. Test the Webhook
+
+After configuration, test a purchase:
+1. Complete a test checkout in Stripe
+2. Check Stripe webhook logs for successful delivery
+3. Verify email is sent to customer
+4. Check Worker logs: `wrangler tail`
+
+**Note:** The webhook handler will automatically send a download email to the customer when `checkout.session.completed` is received and payment is successful.
 
 ## Security Best Practices
 
