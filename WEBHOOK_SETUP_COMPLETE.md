@@ -15,7 +15,7 @@
 - **Mode:** Live (production)
 
 ### 2. Webhook Secret Configured
-- **Secret:** `***REMOVED***`
+- **Secret:** `[REDACTED - Stored securely in Cloudflare Worker secrets]`
 - **Set in Cloudflare Worker:** ✅ Complete
 - **Verification:** Ready for signature verification
 
