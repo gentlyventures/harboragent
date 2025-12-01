@@ -7,12 +7,14 @@
 These need to be set in Cloudflare Pages for the build process:
 
 1. **VITE_STRIPE_PUBLISHABLE_KEY**
-   - Value: `pk_live_519LJSQE5Ht8pVL1uTp4kZb0t6HiRk5xeMaLLR80mGlBbW6aIC3Wk7WeG2XReEpfX1iTrwPaGPRQfZbTdsP3dqQmE00OyDS5kgT`
+   - Value: `pk_live_...` (Your Stripe publishable key)
    - Purpose: Stripe publishable key for client-side checkout
+   - Get from: https://dashboard.stripe.com/apikeys
 
 2. **VITE_STRIPE_PRICE_ID**
-   - Value: `price_1SZQOvE5Ht8pVL1uaWvlmgxK`
+   - Value: `price_...` (Your Stripe price ID for $199 product)
    - Purpose: Stripe price ID for $199 one-time purchase
+   - Get from: Stripe Dashboard → Products → Your $199 product
 
 3. **VITE_WORKER_URL** (optional, has default)
    - Value: `https://download.harboragent.dev`
@@ -26,9 +28,9 @@ These need to be set in Cloudflare Pages for the build process:
 4. Scroll to **Environment variables** section
 5. Click **Add variable** for each:
    - Name: `VITE_STRIPE_PUBLISHABLE_KEY`
-     Value: `pk_live_519LJSQE5Ht8pVL1uTp4kZb0t6HiRk5xeMaLLR80mGlBbW6aIC3Wk7WeG2XReEpfX1iTrwPaGPRQfZbTdsP3dqQmE00OyDS5kgT`
+     Value: `pk_live_...` (Your actual publishable key from Stripe)
    - Name: `VITE_STRIPE_PRICE_ID`
-     Value: `price_1SZQOvE5Ht8pVL1uaWvlmgxK`
+     Value: `price_...` (Your actual price ID from Stripe)
    - Name: `VITE_WORKER_URL` (optional)
      Value: `https://download.harboragent.dev`
 6. Select **Production** environment (or both Production and Preview)
@@ -48,10 +50,10 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/1e3a745b2bf8490fc60ea
       "production": {
         "env_vars": {
           "VITE_STRIPE_PUBLISHABLE_KEY": {
-            "value": "pk_live_519LJSQE5Ht8pVL1uTp4kZb0t6HiRk5xeMaLLR80mGlBbW6aIC3Wk7WeG2XReEpfX1iTrwPaGPRQfZbTdsP3dqQmE00OyDS5kgT"
+            "value": "pk_live_YOUR_ACTUAL_KEY_HERE"
           },
           "VITE_STRIPE_PRICE_ID": {
-            "value": "price_1SZQOvE5Ht8pVL1uaWvlmgxK"
+            "value": "price_YOUR_ACTUAL_PRICE_ID_HERE"
           },
           "VITE_WORKER_URL": {
             "value": "https://download.harboragent.dev"
@@ -64,15 +66,16 @@ curl -X PUT "https://api.cloudflare.com/client/v4/accounts/1e3a745b2bf8490fc60ea
 
 ## Current Status
 
-✅ **Stripe Price Created:**
-- Price ID: `price_1SZQOvE5Ht8pVL1uaWvlmgxK`
+✅ **Stripe Configuration:**
+- Price ID: Created in Stripe (check Stripe Dashboard)
 - Amount: $199.00 USD
 - Type: One-time payment
 - Product: Genesis Mission Readiness Pack
 
 ✅ **Publishable Key:**
-- Key: `pk_live_519LJSQE5Ht8pVL1uTp4kZb0t6HiRk5xeMaLLR80mGlBbW6aIC3Wk7WeG2XReEpfX1iTrwPaGPRQfZbTdsP3dqQmE00OyDS5kgT`
+- Key: Set in Cloudflare Pages environment variables
 - Mode: Live (production)
+- Note: Publishable keys are safe to expose in client-side code
 
 ✅ **Local Build:**
 - Environment variables set in `.env`
