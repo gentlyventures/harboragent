@@ -220,6 +220,7 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
     // Create Stripe checkout session
     const formData = new URLSearchParams();
     formData.append('mode', 'payment');
+    formData.append('payment_method_types[]', 'card');
     formData.append('success_url', successUrl);
     formData.append('cancel_url', cancelUrl);
     formData.append('line_items[0][price]', priceId);
@@ -248,7 +249,11 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
 
     const session = await response.json();
 
-    return new Response(JSON.stringify({ sessionId: session.id }), {
+    // Return both sessionId and url for flexibility
+    return new Response(JSON.stringify({ 
+      sessionId: session.id,
+      url: session.url 
+    }), {
       headers: { 
         'Content-Type': 'application/json',
         ...getCorsHeaders(),
