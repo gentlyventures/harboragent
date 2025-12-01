@@ -18,7 +18,8 @@ cp env.template .env
 
 Edit `.env` and add:
 - `VITE_STRIPE_PUBLISHABLE_KEY` - From Stripe Dashboard
-- `VITE_STRIPE_PRICE_ID` - Your Professional Pack price ID
+- `VITE_STRIPE_PRICE_ID` - Your Professional Pack price ID ($199 one-time)
+- `VITE_STRIPE_CHECKOUT_URL` - Optional: Direct Stripe checkout URL (e.g., `https://buy.stripe.com/YOUR-LIVE-CHECKOUT-LINK`)
 - `VITE_WORKER_URL` - Already set to the default Cloudflare Worker
 
 ### 3. Start Development Server
@@ -41,7 +42,7 @@ The site will open at `http://localhost:3000`
 - **Hero Section** - Eye-catching introduction with gradient background
 - **What is Genesis** - Explains the DOE Genesis Mission
 - **Features** - Shows what problems the pack solves
-- **Pricing** - Free tier vs Professional Pack comparison
+- **Pricing** - Free tier vs Professional Pack ($199 one-time) comparison
 - **CTA Section** - Call-to-action for purchasing
 - **Footer** - Links and company information
 

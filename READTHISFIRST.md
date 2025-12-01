@@ -176,12 +176,21 @@ This prevents AI tools from hallucinating requirements or making unsafe changes.
 
 ---
 
-# 4. Licensing
+# 4. Pricing & Licensing
 
-The free material in this repo is open for personal and internal use.  
+The free material in this repo is open for personal and internal use.
+
+## Full Pack Pricing
+
+The **Genesis Mission Readiness Pack** is available for a **one-time license of $199 per organization**.
+
+[→ Buy Now](https://buy.stripe.com/YOUR-LIVE-CHECKOUT-LINK)
+
+This pack is licensed for use by one organization. Redistribution or resale is not permitted.
+
 For the full pack (including all templates, schemas, playbooks, and internal artifacts), visit:
 
-https://gentlyventures.com/products/harbor-agent
+https://harboragent.dev/packs/genesis-mission#pricing
 
 ---
 

@@ -7,6 +7,16 @@ Created by **Gently Ventures**
 > specific initiative or framework. This repository contains the free, open-source portion
 > of the **Harbor Agent — Genesis Mission Readiness Pack (Pack #1)**.
 
+## Pricing
+
+The Genesis Mission Readiness Pack is available for a **one-time license of $199 per organization**.
+
+[→ Buy Now](https://buy.stripe.com/YOUR-LIVE-CHECKOUT-LINK)
+
+Includes full compliance templates, automation scripts, proposal kits, and governance playbooks.
+
+---
+
 Harbor Agent is a product line from Gently Ventures.
 
 Each Harbor Agent Pack is a focused, AI-native compliance and readiness co-pack for a specific government or industry initiative. We translate large, ambiguous initiatives into developer-ready artifacts and AI-native workflows that engineering, ML, and security teams can actually use.
@@ -89,9 +99,9 @@ The full **Genesis Mission Readiness Professional Pack** includes:
 
 👉 **Get the full pack:**  
 
-🚀 [Harbor Agent Genesis Mission Pro Pack](https://gentlyventures.com/products/harbor-agent)
+🚀 [Buy Now for $199](https://buy.stripe.com/YOUR-LIVE-CHECKOUT-LINK)
 
-Includes editable templates, full checklists, audit scripts, and rollout tooling for organizational adoption.
+Includes editable templates, full checklists, audit scripts, and rollout tooling for organizational adoption. Licensed for use by one organization. No subscriptions. Free updates for all 2025 revisions.
 
 Or visit the product site:  
 
