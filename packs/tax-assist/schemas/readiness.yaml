@@ -1,0 +1,89 @@
+# path: packs/tax-assist/schemas/readiness.yaml
+
+version: "0.1"
+practice:
+  name: ""
+  contact:
+    email: ""
+    preparer_ptin: ""
+    technical_lead: ""
+
+readiness_summary:
+  overall_score: ""
+  critical_coverage: ""
+  important_coverage: ""
+  optional_coverage: ""
+  top_gaps:
+    - ""
+    - ""
+    - ""
+    - ""
+    - ""
+
+domains:
+  forms_data:
+    score: ""
+    notes: ""
+  software_tools:
+    score: ""
+    notes: ""
+  workflows:
+    score: ""
+    notes: ""
+  security_compliance:
+    score: ""
+    notes: ""
+  documentation_training:
+    score: ""
+    notes: ""
+
+tax_year: "2025"
+software_vendor: ""
+software_version: ""
+
+forms_status:
+  form_1040: ""
+  form_1099_da: ""
+  form_7203: ""
+  schedule_k1_1065: ""
+  schedule_k1_1120s: ""
+  forms_8995_8995a: ""
+
+e_filing_status:
+  mef_integration: ""
+  schema_compliance: ""
+  transmission_testing: ""
+  acknowledgment_processing: ""
+
+staff_training:
+  tax_law_changes: ""
+  new_forms: ""
+  digital_assets: ""
+  e_filing_updates: ""
+
+client_communication:
+  newsletter_prepared: ""
+  digital_assets_communication: ""
+  intake_forms_updated: ""
+
+next_steps:
+  days_30:
+    - ""
+    - ""
+    - ""
+  days_60:
+    - ""
+    - ""
+    - ""
+  days_90:
+    - ""
+    - ""
+    - ""
+
+attachments:
+  tax_law_summary: ""
+  form_guides: ""
+  workflow_documentation: ""
+  security_policy: ""
+  client_communication_templates: ""
+

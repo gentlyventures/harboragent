@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Tax Preparation Metadata Schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the tax return, client file, or document."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version ID for the artifact (e.g., tax year, return version)."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["tax_return", "client_file", "document", "form", "workflow"],
+      "description": "Type of artifact."
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what this artifact contains or represents."
+    },
+    "classification": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted"],
+      "description": "Data classification level (client data is typically confidential or restricted)."
+    },
+    "tax_year": {
+      "type": "string",
+      "description": "Tax year (e.g., '2025')."
+    },
+    "form_types": {
+      "type": "array",
+      "description": "IRS forms included (e.g., ['1040', '1099-DA', 'K-1']).",
+      "items": { "type": "string" }
+    },
+    "source": {
+      "type": "string",
+      "description": "Source of the data (client upload, data entry, automated extraction, etc.)."
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "created_by": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "prepared_by": { "type": "string" },
+        "reviewed_by": { "type": "string" },
+        "e_filed_at": { "type": "string", "format": "date-time" },
+        "transformations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "client_info": {
+      "type": "object",
+      "properties": {
+        "client_id": { "type": "string" },
+        "taxpayer_name": { "type": "string" },
+        "ssn_masked": { "type": "string" },
+        "filing_status": { "type": "string" }
+      }
+    },
+    "data_sources": {
+      "type": "array",
+      "description": "Source documents (W-2s, 1099s, K-1s, receipts, etc.).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_type": { "type": "string" },
+          "form_number": { "type": "string" },
+          "source": { "type": "string" },
+          "extracted_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "quality_metrics": {
+      "type": "object",
+      "description": "Quality assurance metrics (review status, error count, etc.).",
+      "properties": {
+        "review_status": {
+          "type": "string",
+          "enum": ["pending", "in_review", "approved", "needs_correction"]
+        },
+        "error_count": { "type": "integer" },
+        "validation_passed": { "type": "boolean" }
+      }
+    },
+    "e_file_info": {
+      "type": "object",
+      "properties": {
+        "e_filed": { "type": "boolean" },
+        "transmission_id": { "type": "string" },
+        "acknowledgment_received": { "type": "boolean" },
+        "acknowledgment_date": { "type": "string", "format": "date-time" }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "properties": {
+        "retention_period_years": { "type": "integer" },
+        "disposal_date": { "type": "string", "format": "date" }
+      }
+    }
+  },
+  "required": ["name", "version", "type", "tax_year"]
+}
+

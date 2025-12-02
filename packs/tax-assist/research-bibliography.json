@@ -1,0 +1,408 @@
+{
+    "version": "2025-12-02",
+    "description": "Bibliography for 2025 U.S. tax changes and filing requirements, grouped for Harbor Agent / Cursor ingestion.",
+    "sources": {
+      "IRS_INFLATION_2025": {
+        "title": "IRS – Inflation Adjustments for Tax Year 2025",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/newsroom",
+        "category": "official_guidance",
+        "status": "final_or_recurring",
+        "notes": "Annual inflation adjustments for brackets, standard deduction, AMT, credits and thresholds for TY2025.",
+        "tags": ["individual", "corporate", "inflation_adjustments", "rates", "2025"]
+      },
+      "IRS_MILEAGE_2025": {
+        "title": "IRS – 2025 Standard Mileage Rates",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/newsroom/irs-issues-standard-mileage-rates",
+        "category": "official_guidance",
+        "status": "final_or_recurring",
+        "notes": "Standard mileage rates for business, medical, moving, and charitable driving for 2025.",
+        "tags": ["individual", "business", "deductions", "transportation", "2025"]
+      },
+      "IRS_RETIREMENT_LIMITS_2025": {
+        "title": "IRS – 2025 Retirement Contribution Limits",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/retirement-plans",
+        "category": "official_guidance",
+        "status": "final_or_recurring",
+        "notes": "Cost-of-living adjustments for 401(k), IRA, SIMPLE, and catch-up contributions applicable to 2025.",
+        "tags": ["individual", "retirement", "limits", "planning", "2025"]
+      },
+      "IRS_ACA_2025": {
+        "title": "IRS – Affordable Care Act Tax Provisions (2025 updates)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/affordable-care-act",
+        "category": "official_guidance",
+        "status": "final_or_recurring",
+        "notes": "Premium tax credit parameters and affordability percentages affecting 2025 coverage and returns.",
+        "tags": ["individual", "healthcare", "ACA", "credits", "2025"]
+      },
+      "IRS_DRAFT_FORMS_2025": {
+        "title": "IRS – Draft Tax Forms and Instructions (Tax Year 2025)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/draft-forms",
+        "category": "forms_instructions",
+        "status": "draft",
+        "notes": "Draft Forms 1040, schedules, W-2, 1099 series, K-1 and main business returns for the 2025 filing season.",
+        "tags": ["individual", "corporate", "k1", "software", "forms", "drafts", "2025"]
+      },
+      "IRS_TAX_PROS_ENEWS": {
+        "title": "IRS e-News for Tax Professionals",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/tax-professionals/e-news-subscriptions",
+        "category": "communication_channel",
+        "status": "ongoing",
+        "notes": "Primary update channel used by preparers for real-time IRS changes, reminders, and procedural updates.",
+        "tags": ["tax_pros", "communication", "workflow", "news", "procedural"]
+      },
+      "IRS_MEF_2025": {
+        "title": "IRS – Modernized e-File (MeF) Program and Schemas",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/e-file-providers/modernized-e-file-mef",
+        "category": "technical_schema",
+        "status": "final_or_recurring",
+        "notes": "XML schemas, business rules, and validations used by software vendors for TY2025 e-file submissions.",
+        "tags": ["software", "e-file", "schemas", "validation", "2025"]
+      },
+      "IRS_PUB_509_2025": {
+        "title": "IRS Publication 509 – Tax Calendars for 2025",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/publications/p509",
+        "category": "publication",
+        "status": "final_or_recurring",
+        "notes": "Consolidated 2025 due dates for individuals, businesses, payroll, and excise filings.",
+        "tags": ["individual", "corporate", "deadlines", "calendar", "2025"]
+      },
+      "IRS_PUB_541_2025": {
+        "title": "IRS Publication 541 – Partnerships",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/publications/p541",
+        "category": "publication",
+        "status": "final_or_recurring",
+        "notes": "Guidance on partnership taxation, allocations, and K-1 reporting, including updates relevant to 2025.",
+        "tags": ["k1", "partnerships", "pass_through", "guidance", "2025"]
+      },
+      "IRS_PUB_542_2025": {
+        "title": "IRS Publication 542 – Corporations",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/publications/p542",
+        "category": "publication",
+        "status": "final_or_recurring",
+        "notes": "Overview of corporate tax rules for C corps and S corps and their implications for shareholder reporting.",
+        "tags": ["corporate", "s_corp", "k1", "guidance", "2025"]
+      },
+      "IRS_PTE_NOTICE_2024": {
+        "title": "IRS Notice on Pass-Through Entity (PTE) Tax Clarifications",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/notices",
+        "category": "notice",
+        "status": "final_or_interim",
+        "notes": "Clarifies treatment of state PTE tax regimes and federal deductibility; impacts K-1 reporting.",
+        "tags": ["k1", "pass_through", "SALT", "state_tax", "2025"]
+      },
+      "IRS_EFILE_EXPANSION_ANNOUNCEMENT": {
+        "title": "IRS Announcement – Expansion of Electronic Filing Requirements",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/newsroom",
+        "category": "announcement",
+        "status": "final_or_interim",
+        "notes": "Expands mandatory e-filing thresholds for businesses and return preparers starting with 2025 filings.",
+        "tags": ["corporate", "software", "workflow", "e-file", "compliance", "2025"]
+      },
+      "IRS_CRYPTO_RULING_2024": {
+        "title": "IRS Revenue Ruling on Virtual Currency / Digital Assets",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/newsroom",
+        "category": "revenue_ruling",
+        "status": "final_or_interim",
+        "notes": "Updates treatment of cryptocurrency transactions affecting Form 8949 and related reporting.",
+        "tags": ["individual", "corporate", "crypto", "capital_gains", "2025"]
+      },
+      "IRS_1099_DA_FINAL_RULE": {
+        "title": "IRS Final Rule – Digital Asset Broker Reporting (Form 1099-DA)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/digital-assets",
+        "category": "regulation",
+        "status": "final_or_effective_2025",
+        "notes": "Requires digital asset brokers to issue new Form 1099-DA, creating high-volume data for taxpayers and software.",
+        "tags": ["individual", "corporate", "crypto", "information_reporting", "software", "2025"]
+      },
+      "IRS_FORM_7203_DRAFT_2025": {
+        "title": "IRS Draft Instructions – Form 7203 (S Corporation Shareholder Stock and Debt Basis)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/forms-instructions",
+        "category": "forms_instructions",
+        "status": "draft",
+        "notes": "Tracks shareholder basis, distributions, and loss limitations for S corporation owners for 2025.",
+        "tags": ["k1", "s_corp", "basis", "individual", "2025"]
+      },
+      "IRS_DIRECT_FILE_EXPANSION_2025": {
+        "title": "IRS Direct File – Expansion Announcements for 2025",
+        "authority": "IRS",
+        "url": "https://directfile.irs.gov",
+        "category": "program_announcement",
+        "status": "expanding",
+        "notes": "Describes Direct File’s state expansion, supported forms, and eligibility for the 2025 season.",
+        "tags": ["individual", "direct_file", "software", "ai_opportunity", "2025"]
+      },
+      "TREASURY_GREENBOOK_FY2025": {
+        "title": "Treasury Greenbook – General Explanations of the Administration’s Fiscal Year 2025 Revenue Proposals",
+        "authority": "U.S. Treasury",
+        "url": "https://home.treasury.gov",
+        "category": "policy_proposal",
+        "status": "proposed",
+        "notes": "Summarizes proposed but not enacted tax changes, including corporate, individual, and high-income provisions.",
+        "tags": ["individual", "corporate", "legislative", "proposals", "future_risk"]
+      },
+      "HOUSE_WAYS_MEANS_DRAFT_2024_2025": {
+        "title": "House Ways & Means Committee – Tax Legislation Drafts and Hearing Materials (2024–2025)",
+        "authority": "U.S. House Ways & Means Committee",
+        "url": "https://waysandmeans.house.gov",
+        "category": "legislative_draft",
+        "status": "proposed",
+        "notes": "Committee drafts and frameworks for individual and corporate tax changes relevant to 2025 and beyond.",
+        "tags": ["legislative", "corporate", "individual", "2025", "policy_tracking"]
+      },
+      "SENATE_FINANCE_TAX_FRAMEWORK_2024_2025": {
+        "title": "Senate Finance Committee – Tax Framework and Proposals (2024–2025)",
+        "authority": "U.S. Senate Finance Committee",
+        "url": "https://www.finance.senate.gov",
+        "category": "legislative_draft",
+        "status": "proposed",
+        "notes": "Proposals regarding expiring TCJA provisions, credits, and corporate provisions with 2025 implications.",
+        "tags": ["legislative", "corporate", "individual", "TCJA", "future_risk"]
+      },
+      "CRS_2025_EXPIRING_PROVISIONS": {
+        "title": "CRS Reports – Individual and Business Tax Provisions Expiring or Changing by 2025",
+        "authority": "Congressional Research Service",
+        "url": "https://crsreports.congress.gov",
+        "category": "analysis",
+        "status": "informational",
+        "notes": "Nonpartisan analysis of federal tax provisions scheduled to sunset or change by 2025.",
+        "tags": ["individual", "corporate", "k1", "legislative", "planning"]
+      },
+      "IRS_SCHED_K1_1065_1120S_DRAFT_2025": {
+        "title": "IRS Draft Instructions – Schedules K-1 (Forms 1065 and 1120-S) for 2025",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/draft-forms",
+        "category": "forms_instructions",
+        "status": "draft",
+        "notes": "Proposed changes to partnership and S-corp K-1 data elements and disclosure requirements for TY2025.",
+        "tags": ["k1", "pass_through", "partnership", "s_corp", "software", "2025"]
+      },
+      "IRS_FORMS_8995_8995A_DRAFT_2025": {
+        "title": "IRS Forms 8995 and 8995-A – Qualified Business Income Deduction (draft 2025 updates)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/forms-instructions",
+        "category": "forms_instructions",
+        "status": "draft",
+        "notes": "QBI computation rules and layout for individuals receiving pass-through K-1 income.",
+        "tags": ["individual", "k1", "QBI", "deductions", "2025"]
+      },
+      "IRS_FORM_7206_PTC_2025": {
+        "title": "IRS Form 7206 – Premium Tax Credit (2025 draft or final updates)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/forms-instructions",
+        "category": "forms_instructions",
+        "status": "draft_or_final",
+        "notes": "Reconciliation of premium tax credits tied to ACA affordability for 2025 coverage.",
+        "tags": ["individual", "ACA", "credits", "forms", "2025"]
+      },
+      "IRS_PTE_SALT_REGS_PROPOSED": {
+        "title": "IRS Proposed Regulations – State and Local Tax (SALT) Cap Workarounds via PTE Taxes",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/irs-drop",
+        "category": "proposed_regulation",
+        "status": "proposed",
+        "notes": "Clarifies federal treatment of state PTE tax regimes; important for partnership and S-corp K-1 prep.",
+        "tags": ["k1", "SALT", "pass_through", "partnership", "corporate"]
+      },
+      "NATP_2025_UPDATES": {
+        "title": "National Association of Tax Professionals (NATP) – 2025 Tax Law Updates and Guidance",
+        "authority": "NATP",
+        "url": "https://www.natptax.com",
+        "category": "professional_association",
+        "status": "ongoing",
+        "notes": "Practical practitioner-focused summaries of IRS changes and practice management implications.",
+        "tags": ["tax_pros", "individual", "workflow", "training", "2025"]
+      },
+      "AICPA_TAX_SECTION_2025": {
+        "title": "AICPA Tax Section – 2025 Filing Season Resources",
+        "authority": "AICPA",
+        "url": "https://www.aicpa-cima.com",
+        "category": "professional_association",
+        "status": "ongoing",
+        "notes": "Guidance, comment letters, and tools aimed at CPAs and firms regarding new and evolving requirements.",
+        "tags": ["corporate", "tax_pros", "k1", "workflow", "2025"]
+      },
+      "TAXPAYER_ADVOCATE_REPORTS_2024_2025": {
+        "title": "National Taxpayer Advocate – Annual Reports to Congress (2024–2025)",
+        "authority": "National Taxpayer Advocate",
+        "url": "https://www.taxpayeradvocate.irs.gov/reports",
+        "category": "analysis",
+        "status": "informational",
+        "notes": "Identifies systemic issues in IRS processes affecting preparers and taxpayers during filing season.",
+        "tags": ["individual", "corporate", "pain_points", "systemic_issues"]
+      },
+      "THOMSON_REUTERS_TAX_UPDATES_2025": {
+        "title": "Thomson Reuters / Checkpoint – 2025 Federal Tax Law Update Coverage",
+        "authority": "Thomson Reuters",
+        "url": "https://tax.thomsonreuters.com",
+        "category": "commercial_analysis",
+        "status": "informational",
+        "notes": "Enterprise-focused commentary and trackers for new federal tax changes.",
+        "tags": ["corporate", "tax_pros", "analysis", "2025"]
+      },
+      "BLOOMBERG_TAX_2025_TRACKER": {
+        "title": "Bloomberg Tax – 2025 Tax Provisions and Policy Tracker",
+        "authority": "Bloomberg Tax",
+        "url": "https://news.bloombergtax.com",
+        "category": "commercial_analysis",
+        "status": "informational",
+        "notes": "Tracks enacted and proposed changes affecting corporations and high-income taxpayers.",
+        "tags": ["corporate", "individual", "policy_tracking", "2025"]
+      },
+      "INTUIT_PROCONNECT_2025_CHANGES": {
+        "title": "Intuit ProConnect – 2025 Tax Law Changes and Filing Season Updates",
+        "authority": "Intuit ProConnect",
+        "url": "https://proconnect.intuit.com",
+        "category": "vendor_update",
+        "status": "informational",
+        "notes": "Software-vendor view of key tax changes and how they map into workflow for preparers.",
+        "tags": ["software", "tax_pros", "workflow", "2025"]
+      },
+      "IRS_MEF_XSD_REPO_2025": {
+        "title": "IRS MeF XSD Schema Repository (Tax Year 2025)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/e-file-providers/modernized-e-file-mef-schemas",
+        "category": "technical_schema",
+        "status": "final_or_recurring",
+        "notes": "The actual XSD and schema files defining machine-readable structure for e-file returns.",
+        "tags": ["software", "ai_workflow", "e-file", "schemas", "2025"]
+      },
+      "IRS_DIGITAL_INITIATIVES_1040": {
+        "title": "IRS Digital Initiatives for Individual Returns (1040 Modernization)",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/digital",
+        "category": "program_description",
+        "status": "in_progress",
+        "notes": "Modernization efforts around digital intake, APIs, and structured data for individual returns.",
+        "tags": ["individual", "software", "ai_workflow", "modernization"]
+      },
+      "IRS_DIGITAL_ASSET_RULES": {
+        "title": "IRS Digital Assets – Final and Proposed Rules",
+        "authority": "IRS",
+        "url": "https://www.irs.gov/digital-assets",
+        "category": "regulation",
+        "status": "mixed",
+        "notes": "Consolidated rules and FAQs on digital asset reporting, broker obligations, and taxpayer responsibilities.",
+        "tags": ["individual", "corporate", "crypto", "information_reporting", "2025"]
+      },
+      "IRS_DIRECT_FILE_DEVELOPER_DOCS": {
+        "title": "IRS Direct File – Developer and Technical Documentation",
+        "authority": "IRS",
+        "url": "https://directfile.irs.gov/developers",
+        "category": "technical_docs",
+        "status": "in_progress",
+        "notes": "Programmatic and technical specifications for the Direct File system, relevant to integrations and AI tools.",
+        "tags": ["software", "ai_workflow", "APIs", "direct_file"]
+      }
+    },
+    "groups": {
+      "individual": [
+        "IRS_INFLATION_2025",
+        "IRS_MILEAGE_2025",
+        "IRS_RETIREMENT_LIMITS_2025",
+        "IRS_ACA_2025",
+        "IRS_DRAFT_FORMS_2025",
+        "IRS_PUB_509_2025",
+        "IRS_CRYPTO_RULING_2024",
+        "IRS_1099_DA_FINAL_RULE",
+        "IRS_FORM_7203_DRAFT_2025",
+        "IRS_DIRECT_FILE_EXPANSION_2025",
+        "TREASURY_GREENBOOK_FY2025",
+        "HOUSE_WAYS_MEANS_DRAFT_2024_2025",
+        "SENATE_FINANCE_TAX_FRAMEWORK_2024_2025",
+        "CRS_2025_EXPIRING_PROVISIONS",
+        "IRS_FORMS_8995_8995A_DRAFT_2025",
+        "IRS_FORM_7206_PTC_2025",
+        "NATP_2025_UPDATES",
+        "TAXPAYER_ADVOCATE_REPORTS_2024_2025",
+        "BLOOMBERG_TAX_2025_TRACKER",
+        "INTUIT_PROCONNECT_2025_CHANGES",
+        "IRS_DIGITAL_INITIATIVES_1040",
+        "IRS_DIGITAL_ASSET_RULES"
+      ],
+      "corporate": [
+        "IRS_INFLATION_2025",
+        "IRS_DRAFT_FORMS_2025",
+        "IRS_PUB_509_2025",
+        "IRS_PUB_542_2025",
+        "IRS_PTE_NOTICE_2024",
+        "IRS_EFILE_EXPANSION_ANNOUNCEMENT",
+        "IRS_CRYPTO_RULING_2024",
+        "IRS_1099_DA_FINAL_RULE",
+        "TREASURY_GREENBOOK_FY2025",
+        "HOUSE_WAYS_MEANS_DRAFT_2024_2025",
+        "SENATE_FINANCE_TAX_FRAMEWORK_2024_2025",
+        "CRS_2025_EXPIRING_PROVISIONS",
+        "IRS_PTE_SALT_REGS_PROPOSED",
+        "AICPA_TAX_SECTION_2025",
+        "TAXPAYER_ADVOCATE_REPORTS_2024_2025",
+        "THOMSON_REUTERS_TAX_UPDATES_2025",
+        "BLOOMBERG_TAX_2025_TRACKER",
+        "IRS_DIGITAL_ASSET_RULES"
+      ],
+      "k1_and_pass_through": [
+        "IRS_PUB_541_2025",
+        "IRS_PUB_542_2025",
+        "IRS_PTE_NOTICE_2024",
+        "IRS_SCHED_K1_1065_1120S_DRAFT_2025",
+        "IRS_FORMS_8995_8995A_DRAFT_2025",
+        "IRS_PTE_SALT_REGS_PROPOSED",
+        "CRS_2025_EXPIRING_PROVISIONS",
+        "AICPA_TAX_SECTION_2025"
+      ],
+      "software_vendors_and_tools": [
+        "IRS_DRAFT_FORMS_2025",
+        "IRS_MEF_2025",
+        "IRS_EFILE_EXPANSION_ANNOUNCEMENT",
+        "IRS_1099_DA_FINAL_RULE",
+        "IRS_SCHED_K1_1065_1120S_DRAFT_2025",
+        "IRS_FORMS_8995_8995A_DRAFT_2025",
+        "IRS_FORM_7206_PTC_2025",
+        "INTUIT_PROCONNECT_2025_CHANGES",
+        "IRS_MEF_XSD_REPO_2025",
+        "IRS_DIRECT_FILE_DEVELOPER_DOCS",
+        "IRS_DIGITAL_INITIATIVES_1040",
+        "IRS_DIGITAL_ASSET_RULES"
+      ],
+      "ai_workflow_and_tax_pros": [
+        "IRS_TAX_PROS_ENEWS",
+        "NATP_2025_UPDATES",
+        "AICPA_TAX_SECTION_2025",
+        "TAXPAYER_ADVOCATE_REPORTS_2024_2025",
+        "THOMSON_REUTERS_TAX_UPDATES_2025",
+        "BLOOMBERG_TAX_2025_TRACKER",
+        "INTUIT_PROCONNECT_2025_CHANGES",
+        "IRS_MEF_2025",
+        "IRS_MEF_XSD_REPO_2025",
+        "IRS_DIRECT_FILE_EXPANSION_2025",
+        "IRS_DIRECT_FILE_DEVELOPER_DOCS",
+        "IRS_DIGITAL_INITIATIVES_1040"
+      ],
+      "legislative_and_policy_context": [
+        "TREASURY_GREENBOOK_FY2025",
+        "HOUSE_WAYS_MEANS_DRAFT_2024_2025",
+        "SENATE_FINANCE_TAX_FRAMEWORK_2024_2025",
+        "CRS_2025_EXPIRING_PROVISIONS"
+      ],
+      "general_reference": [
+        "IRS_INFLATION_2025",
+        "IRS_PUB_509_2025",
+        "TAXPAYER_ADVOCATE_REPORTS_2024_2025"
+      ]
+    }
+  }
+  

@@ -1,0 +1,257 @@
+{
+  "version": "0.1",
+  "name": "2025 Tax Year Readiness Checklist",
+  "domains": {
+    "forms_data": [
+      {
+        "id": "individual_forms",
+        "item": "Individual Return Forms (Form 1040)",
+        "description": "2025 tax bracket tables, standard deduction, and Form 1040 updates implemented.",
+        "priority": "critical"
+      },
+      {
+        "id": "mileage_rates",
+        "item": "Standard Mileage Rates",
+        "description": "2025 standard mileage rates (67¢ business, 21¢ medical/moving, 14¢ charitable) updated.",
+        "priority": "critical"
+      },
+      {
+        "id": "retirement_limits",
+        "item": "Retirement Contribution Limits",
+        "description": "2025 retirement contribution limits (401(k): $23,000, IRA: $7,000) updated.",
+        "priority": "critical"
+      },
+      {
+        "id": "form_1099_da",
+        "item": "Form 1099-DA (Digital Asset Broker Reporting)",
+        "description": "Form 1099-DA parsing, data extraction, and integration with Form 8949 implemented.",
+        "priority": "critical"
+      },
+      {
+        "id": "crypto_integration",
+        "item": "Digital Asset Transaction Processing",
+        "description": "Digital asset transaction import workflows and Form 8949 integration verified.",
+        "priority": "critical"
+      },
+      {
+        "id": "k1_processing",
+        "item": "Schedule K-1 Processing",
+        "description": "2025 K-1 schedule updates (Forms 1065, 1120-S) implemented and tested.",
+        "priority": "critical"
+      },
+      {
+        "id": "qbi_calculations",
+        "item": "QBI Deduction Calculations",
+        "description": "Qualified Business Income (QBI) deduction calculations updated for 2025.",
+        "priority": "critical"
+      },
+      {
+        "id": "form_7203",
+        "item": "Form 7203 (S Corporation Shareholder Basis)",
+        "description": "Form 7203 processing and basis tracking implemented.",
+        "priority": "critical"
+      },
+      {
+        "id": "information_returns",
+        "item": "Information Return Processing",
+        "description": "W-2 and 1099 series processing verified and tested.",
+        "priority": "critical"
+      }
+    ],
+    "software_tools": [
+      {
+        "id": "tax_software_updates",
+        "item": "Tax Software Updates",
+        "description": "2025 tax software updates installed, tested, and verified.",
+        "priority": "critical"
+      },
+      {
+        "id": "form_library",
+        "item": "2025 Form Library",
+        "description": "2025 form library updated with all required forms.",
+        "priority": "critical"
+      },
+      {
+        "id": "calculation_engine",
+        "item": "Calculation Engine Verification",
+        "description": "Tax calculation engine accuracy verified for 2025 changes.",
+        "priority": "critical"
+      },
+      {
+        "id": "mef_integration",
+        "item": "Modernized e-File (MeF) Integration",
+        "description": "MeF integration updated for 2025 schemas and requirements.",
+        "priority": "critical"
+      },
+      {
+        "id": "schema_compliance",
+        "item": "MeF Schema Compliance",
+        "description": "MeF schema compliance verified for all return types.",
+        "priority": "critical"
+      },
+      {
+        "id": "e_file_testing",
+        "item": "E-File Transmission Testing",
+        "description": "E-file transmission tested end-to-end with acknowledgment processing.",
+        "priority": "critical"
+      },
+      {
+        "id": "document_processing",
+        "item": "Document Processing Tools",
+        "description": "Document scanning, OCR, and data extraction workflows tested.",
+        "priority": "important"
+      },
+      {
+        "id": "data_validation",
+        "item": "Data Validation and Quality Checks",
+        "description": "Data validation and quality assurance processes implemented.",
+        "priority": "critical"
+      }
+    ],
+    "workflows": [
+      {
+        "id": "client_intake",
+        "item": "Client Intake Forms",
+        "description": "Client intake forms updated for 2025 changes and digital asset questionnaire added.",
+        "priority": "critical"
+      },
+      {
+        "id": "data_processing",
+        "item": "Data Processing Workflows",
+        "description": "Document processing workflows standardized and optimized.",
+        "priority": "critical"
+      },
+      {
+        "id": "quality_assurance",
+        "item": "Quality Assurance Processes",
+        "description": "Data entry quality assurance processes defined and implemented.",
+        "priority": "critical"
+      },
+      {
+        "id": "return_preparation",
+        "item": "Return Preparation Checklists",
+        "description": "Return preparation checklists updated for 2025 changes.",
+        "priority": "critical"
+      },
+      {
+        "id": "review_procedures",
+        "item": "Review and Approval Procedures",
+        "description": "Review and quality assurance procedures documented and implemented.",
+        "priority": "critical"
+      },
+      {
+        "id": "e_filing_workflows",
+        "item": "E-Filing Workflows",
+        "description": "E-filing workflows tested end-to-end with acknowledgment tracking.",
+        "priority": "critical"
+      },
+      {
+        "id": "client_delivery",
+        "item": "Client Delivery Workflows",
+        "description": "Client delivery workflows standardized and secure.",
+        "priority": "critical"
+      }
+    ],
+    "security_compliance": [
+      {
+        "id": "encryption_transit",
+        "item": "Encryption in Transit",
+        "description": "Client data encrypted in transit (TLS/SSL) for all communications.",
+        "priority": "critical"
+      },
+      {
+        "id": "encryption_rest",
+        "item": "Encryption at Rest",
+        "description": "Client data encrypted at rest on all storage systems.",
+        "priority": "critical"
+      },
+      {
+        "id": "access_controls",
+        "item": "Access Controls and User Permissions",
+        "description": "Role-based access controls implemented and reviewed.",
+        "priority": "critical"
+      },
+      {
+        "id": "audit_logging",
+        "item": "Audit Logging",
+        "description": "Client data access logging enabled and monitored.",
+        "priority": "critical"
+      },
+      {
+        "id": "privacy_policy",
+        "item": "Privacy Policy Updates",
+        "description": "Privacy policy updated for 2025 requirements and client communication.",
+        "priority": "critical"
+      },
+      {
+        "id": "circular_230",
+        "item": "Circular 230 Compliance",
+        "description": "Circular 230 professional standards compliance reviewed.",
+        "priority": "critical"
+      },
+      {
+        "id": "ptin_verification",
+        "item": "PTIN Verification",
+        "description": "Preparer Tax Identification Number (PTIN) current and verified.",
+        "priority": "critical"
+      },
+      {
+        "id": "e_filing_compliance",
+        "item": "E-Filing Compliance",
+        "description": "E-filing mandate compliance verified for all applicable returns.",
+        "priority": "critical"
+      }
+    ],
+    "documentation_training": [
+      {
+        "id": "tax_law_summary",
+        "item": "2025 Tax Law Change Summary",
+        "description": "2025 tax law change summary prepared and distributed to staff.",
+        "priority": "critical"
+      },
+      {
+        "id": "form_guides",
+        "item": "Form-Specific Preparation Guides",
+        "description": "Form-specific preparation guides created for new and updated forms.",
+        "priority": "important"
+      },
+      {
+        "id": "workflow_documentation",
+        "item": "Workflow Documentation",
+        "description": "Workflow documentation updated for 2025 changes.",
+        "priority": "critical"
+      },
+      {
+        "id": "staff_training",
+        "item": "Staff Training on 2025 Changes",
+        "description": "Staff trained on 2025 tax law changes and new forms.",
+        "priority": "critical"
+      },
+      {
+        "id": "new_forms_training",
+        "item": "New Forms Training",
+        "description": "Training completed on new forms (Form 1099-DA, Form 7203).",
+        "priority": "critical"
+      },
+      {
+        "id": "digital_assets_training",
+        "item": "Digital Asset Reporting Training",
+        "description": "Training completed on digital asset reporting requirements.",
+        "priority": "critical"
+      },
+      {
+        "id": "client_communication",
+        "item": "Client Communication Materials",
+        "description": "Client communication materials prepared for 2025 changes.",
+        "priority": "important"
+      },
+      {
+        "id": "qa_checklists",
+        "item": "Quality Assurance Checklists",
+        "description": "Quality assurance checklists created and implemented.",
+        "priority": "critical"
+      }
+    ]
+  }
+}
+

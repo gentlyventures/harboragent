@@ -7,8 +7,10 @@
 
 export interface Env {
   STRIPE_SECRET_KEY: string;
-  DOWNLOAD_ORIGIN_URL: string;
+  DOWNLOAD_ORIGIN_URL: string; // Genesis pack (legacy)
   GENESIS_PACK_PRICE_ID?: string;
+  TAX_ASSIST_PACK_PRICE_ID?: string;
+  DOWNLOAD_ORIGIN_URL_TAX_ASSIST?: string; // Tax Assist pack
   STRIPE_WEBHOOK_SECRET?: string;
   POSTMARK_SERVER_TOKEN: string;
   POSTMARK_FROM_EMAIL: string;
@@ -142,13 +144,19 @@ async function verifySignedToken(
 }
 
 // Generate LICENSE.txt content
-function generateLicenseText(customerInfo: {
-  email: string;
-  organization?: string;
-  purchaseDate: string;
-  sessionId: string;
-}): string {
-  return `HARBOR AGENT - GENESIS MISSION READINESS PACK
+function generateLicenseText(
+  customerInfo: {
+    email: string;
+    organization?: string;
+    purchaseDate: string;
+    sessionId: string;
+  },
+  packName: string = 'Genesis Mission Readiness'
+): string {
+  const packNameUpper = packName.toUpperCase();
+  const isTaxAssist = packName.toLowerCase().includes('tax');
+  
+  return `HARBOR AGENT - ${packNameUpper} PACK
 LICENSE AGREEMENT
 
 This license is granted to:
@@ -168,20 +176,23 @@ LICENSE TERMS:
    organizations, individuals, or third parties.
 
 3. INTERNAL USE ONLY
-   This pack is intended for internal use within your organization to prepare
-   for DOE Genesis Mission collaboration. You may use it to:
-   - Prepare internal readiness assessments
+   This pack is intended for internal use within your organization${isTaxAssist ? ' to prepare for 2025 U.S. tax year filings' : ' to prepare for DOE Genesis Mission collaboration'}. You may use it to:
+   ${isTaxAssist 
+     ? `   - Prepare internal readiness assessments for 2025 tax year
+   - Generate client communication and documentation
+   - Train your team on 2025 tax law changes
+   - Modernize your tax preparation workflows`
+     : `   - Prepare internal readiness assessments
    - Generate proposals and documentation
    - Train your team on Genesis alignment
-   - Modernize your systems and workflows
+   - Modernize your systems and workflows`}
 
 4. UPDATES
-   This license includes free updates for all 2025 revisions of the Genesis
-   Mission Readiness Pack.
+   This license includes free updates for all 2025 revisions of the ${packName} Pack.
 
 5. NO WARRANTIES
    This pack is provided "as-is" without warranties. It is NOT legal advice,
-   NOT regulatory guidance, and NOT an official DOE document.
+   NOT regulatory guidance, and NOT an official ${isTaxAssist ? 'IRS' : 'DOE'} document.
 
 6. SUPPORT
    For questions or support, contact: support@gentlyventures.com
@@ -242,6 +253,23 @@ export default {
     return new Response('Not Found', { status: 404 });
   },
 };
+
+// Helper to determine pack from price ID or request
+function getPackInfo(priceId: string | undefined, env: Env): { packSlug: string; packName: string; baseZipUrl: string } {
+  // Default to genesis
+  let packSlug = 'genesis';
+  let packName = 'Genesis Mission Readiness';
+  let baseZipUrl = env.DOWNLOAD_ORIGIN_URL;
+  
+  // Check if it's tax-assist pack
+  if (priceId === env.TAX_ASSIST_PACK_PRICE_ID || env.DOWNLOAD_ORIGIN_URL_TAX_ASSIST) {
+    packSlug = 'tax-assist';
+    packName = 'AI Tax Assistant Readiness';
+    baseZipUrl = env.DOWNLOAD_ORIGIN_URL_TAX_ASSIST || env.DOWNLOAD_ORIGIN_URL; // Fallback to genesis URL if not set
+  }
+  
+  return { packSlug, packName, baseZipUrl };
+}
 
 async function handleDownload(request: Request, env: Env): Promise<Response> {
   const sessionId = new URL(request.url).searchParams.get('session_id');
@@ -305,23 +333,29 @@ async function handleSignedDownload(request: Request, env: Env): Promise<Respons
     return new Response('Failed to retrieve session details', { status: 500 });
   }
 
+  // Determine pack info from session
+  const priceId = session.line_items?.data?.[0]?.price?.id || session.metadata?.packSlug;
+  const packInfo = getPackInfo(priceId, env);
+
   // Generate personalized ZIP on-demand
   try {
     const personalizedZip = await generatePersonalizedZip(
-      env.DOWNLOAD_ORIGIN_URL,
+      packInfo.baseZipUrl,
       {
         email: email,
         organization: session.customer_details?.name || undefined,
         purchaseDate: new Date(session.created * 1000).toISOString().split('T')[0],
         sessionId: sessionId,
-      }
+      },
+      packInfo.packName
     );
 
     // Stream personalized ZIP to user
+    const filename = `harbor-agent-${packInfo.packSlug}-pack-${sessionId.slice(-8)}.zip`;
     return new Response(personalizedZip, {
       headers: {
         'Content-Type': 'application/zip',
-        'Content-Disposition': `attachment; filename="harbor-agent-genesis-pack-${sessionId.slice(-8)}.zip"`,
+        'Content-Disposition': `attachment; filename="${filename}"`,
         'Content-Length': personalizedZip.byteLength.toString(),
       },
     });
@@ -340,7 +374,8 @@ async function generatePersonalizedZip(
     organization?: string;
     purchaseDate: string;
     sessionId: string;
-  }
+  },
+  packName: string = 'Genesis Mission Readiness'
 ): Promise<ArrayBuffer> {
   // Import jszip (Workers support ES modules)
   const JSZip = (await import('jszip')).default;
@@ -357,7 +392,7 @@ async function generatePersonalizedZip(
   const zip = await JSZip.loadAsync(baseZipArrayBuffer);
 
   // Add personalized LICENSE.txt
-  const licenseText = generateLicenseText(customerInfo);
+  const licenseText = generateLicenseText(customerInfo, packName);
   zip.file('LICENSE.txt', licenseText);
 
   // Generate new ZIP
@@ -524,6 +559,11 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
         const customerEmail = session.customer_details?.email || session.customer_email;
         
         if (customerEmail) {
+          // Determine pack info from session metadata or price ID
+          const packSlug = session.metadata?.packSlug || 'genesis';
+          const priceId = session.line_items?.data?.[0]?.price?.id;
+          const packInfo = getPackInfo(priceId || (packSlug === 'tax-assist' ? env.TAX_ASSIST_PACK_PRICE_ID : env.GENESIS_PACK_PRICE_ID), env);
+          
           // Generate signed download link with expiration
           const signingKey = env.DOWNLOAD_SIGNING_KEY || env.STRIPE_SECRET_KEY;
           try {
@@ -547,7 +587,8 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
                 organization: session.customer_details?.name || undefined,
                 purchaseDate: new Date().toISOString().split('T')[0],
                 sessionId: session.id,
-              }
+              },
+              packInfo.packName
             );
           } catch (error) {
             console.error('Failed to generate signed token, using unsigned link:', error);
@@ -584,7 +625,8 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
 
   try {
     const body = await request.json();
-    const priceId = body.priceId || env.GENESIS_PACK_PRICE_ID;
+    const packSlug = body.packSlug || 'genesis'; // Default to genesis
+    const priceId = body.priceId || (packSlug === 'tax-assist' ? env.TAX_ASSIST_PACK_PRICE_ID : env.GENESIS_PACK_PRICE_ID);
     const origin = new URL(request.url).origin;
     const successUrl = body.successUrl || `${origin}/success?session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = body.cancelUrl || `${origin}/#pricing`;
@@ -609,6 +651,9 @@ async function handleCreateCheckoutSession(request: Request, env: Env): Promise<
     formData.append('cancel_url', cancelUrl);
     formData.append('line_items[0][price]', priceId);
     formData.append('line_items[0][quantity]', '1');
+    
+    // Add pack slug to metadata for later retrieval
+    formData.append('metadata[packSlug]', packSlug);
     
     // Add coupon code if provided
     if (couponCode && couponCode.trim()) {
@@ -671,7 +716,8 @@ async function sendDownloadEmail(
     organization?: string;
     purchaseDate: string;
     sessionId: string;
-  }
+  },
+  packName: string = 'Genesis Mission Readiness Professional Pack'
 ): Promise<void> {
   try {
     const response = await fetch('https://api.postmarkapp.com/email', {
@@ -684,7 +730,7 @@ async function sendDownloadEmail(
       body: JSON.stringify({
         From: `${fromName} <${fromEmail}>`,
         To: toEmail,
-        Subject: 'Your Genesis Mission Readiness Pack is Ready',
+        Subject: `Your ${packName} is Ready`,
         HtmlBody: `
           <!DOCTYPE html>
           <html>
@@ -717,10 +763,12 @@ async function sendDownloadEmail(
               </div>
               <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
                 <p style="font-size: 16px; margin-bottom: 20px;">
-                  Your <strong>Genesis Mission Readiness Professional Pack</strong> is ready to download.
+                  Your <strong>${packName}</strong> is ready to download.
                 </p>
                 <p style="font-size: 16px; margin-bottom: 30px;">
-                  This pack includes complete compliance templates, automation scripts, proposal kits, and governance playbooks to help your team prepare for the DOE Genesis Mission.
+                  ${packName.includes('Tax') 
+                    ? 'This pack includes readiness checklists, form processing guides, client communication templates, and AI copilot playbooks to help you prepare for the 2025 U.S. tax filing season.'
+                    : 'This pack includes complete compliance templates, automation scripts, proposal kits, and governance playbooks to help your team prepare for the DOE Genesis Mission.'}
                 </p>
                 <div style="text-align: center; margin: 30px 0;">
                   <a href="${downloadUrl}" class="download-button" style="display: inline-block; background-color: #667eea; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">
@@ -731,14 +779,23 @@ async function sendDownloadEmail(
                   <strong>What's included:</strong>
                 </p>
                 <ul style="font-size: 14px; color: #6b7280; line-height: 1.8;">
-                  <li>Full 80–120 item readiness checklist</li>
+                  ${packName.includes('Tax') 
+                    ? `<li>Full 100+ item readiness checklist</li>
+                  <li>Complete AI copilot playbooks for tax workflows</li>
+                  <li>Form processing guides (Form 1099-DA, K-1s, etc.)</li>
+                  <li>Client communication templates</li>
+                  <li>Workflow automation scripts</li>
+                  <li>Full schema suite (JSON & YAML)</li>
+                  <li>Quality assurance checklists</li>
+                  <li>Practice workflow documentation</li>`
+                    : `<li>Full 80–120 item readiness checklist</li>
                   <li>Complete AI copilot playbooks (Cursor, GitHub Copilot, Claude Code)</li>
                   <li>Secure submission bundle templates</li>
                   <li>Reproducibility kits</li>
                   <li>Proposal template (fully editable)</li>
                   <li>Full schema suite (JSON & YAML)</li>
                   <li>12-month roadmap</li>
-                  <li>Enterprise documentation templates</li>
+                  <li>Enterprise documentation templates</li>`}
                 </ul>
                 <p style="font-size: 14px; color: #6b7280; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
                   <strong>Note:</strong> This download link is personalized and secure. It expires in 24 hours for your security. If you have any questions, please contact us at <a href="mailto:support@gentlyventures.com" style="color: #667eea;">support@gentlyventures.com</a>.
