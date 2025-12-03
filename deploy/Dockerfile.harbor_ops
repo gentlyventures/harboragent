@@ -1,0 +1,36 @@
+# Harbor Ops API Dockerfile
+# Builds a containerized FastAPI application for Harbor Agent pack management
+
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install minimal system dependencies for Python package compilation
+# uvicorn[standard] includes uvloop which requires compilation
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy orchestrator directory
+COPY orchestrator/ /app/orchestrator/
+
+# Copy pack-crm directory (needed for pack lifecycle data)
+COPY pack-crm/ /app/pack-crm/
+
+# Copy revenue directory (needed for revenue data access)
+COPY revenue/ /app/revenue/
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r orchestrator/requirements.txt
+
+# Expose port 8000
+EXPOSE 8000
+
+# Default command: start the API server
+# Note: We use uvicorn directly instead of python -m orchestrator api
+# to avoid reload mode in production
+CMD ["uvicorn", "orchestrator.api:app", "--host", "0.0.0.0", "--port", "8000"]
+

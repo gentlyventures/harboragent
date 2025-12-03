@@ -160,7 +160,7 @@ This exports `pack-crm/data/packs.json` to `src/data/packs.local.json` for the R
 
 ### URLs
 
-- **Dev admin URL:** `http://localhost:8080/admin` (when running `pnpm dev`)
+- **Dev admin URL:** `http://localhost:8081/admin` (when running `pnpm dev`)
 - **Prod admin URL (expected):** `https://harboragent.dev/admin`
 
 ### Password Gate
@@ -178,6 +178,10 @@ The admin dashboard is protected by a lightweight password gate:
 ### Dashboard Features
 
 The dashboard shows:
+- **Sales Summary:** Revenue and leads summary (requires Harbor Ops API)
+- **New Idea Form:** Create new packs via the UI (requires Harbor Ops API)
+- **Pack List:** All packs with full lifecycle details
+- **Run Research Pipeline:** Execute research pipeline for any pack (requires Harbor Ops API)
 - **Core Details:** Pack number, name, slug, current stage, price, updated timestamp
 - **CRM Overview:**
   - Idea notes (truncated to first ~200 chars)
@@ -196,7 +200,34 @@ The dashboard shows:
   - Deep dive research conclusions
 - **Deployment Status:** Frontend, Worker, Stripe, R2
 
-**Note:** This is a read-only view. Use CLI scripts to manage packs.
+### Harbor Ops API Integration
+
+The admin dashboard now integrates with the **Harbor Ops API** (FastAPI backend) for interactive features:
+
+- **API Base URL:** Configurable via `VITE_HARBOR_OPS_API_URL` environment variable
+  - **Dev:** Defaults to `http://127.0.0.1:8000` (if env var not set)
+  - **Prod:** Set to `https://api.harboragent.dev` (or your deployed API URL)
+- **Start API (local):** `python -m orchestrator api`
+- **API Docs:** http://127.0.0.1:8000/docs (local) or https://api.harboragent.dev/docs (prod)
+
+**Environment Variable Configuration:**
+
+- **Local Development:**
+  - `VITE_HARBOR_OPS_API_URL` can be left unset; defaults to `http://127.0.0.1:8000`
+  - Or set in `.env` file: `VITE_HARBOR_OPS_API_URL=http://127.0.0.1:8000`
+
+- **Production (Cloudflare Pages):**
+  - Set `VITE_HARBOR_OPS_API_URL=https://api.harboragent.dev` in Cloudflare Pages environment variables
+  - Redeploy the frontend after setting the variable
+
+**Interactive Features (require API):**
+- **New Idea Form:** Create packs directly from the UI
+- **Run Research Pipeline:** Execute research pipeline with one click
+- **Sales Summary:** View revenue/leads data
+
+**Note:** If the API is not running, the dashboard will show an error banner with instructions. The dashboard can still display packs from the API if it was previously running, but interactive features will be disabled.
+
+**Important:** `pack-crm/data/packs.json` remains the TypeScript domain's source of truth. All backend updates via the API preserve unknown keys and maintain JSON structure.
 
 ## For AI Agents (Cursor, etc.)
 
@@ -293,12 +324,29 @@ The admin dashboard reads from `src/data/packs.local.json`, which is generated b
 
 The Worker (`workers/personalized-download/`) currently hardcodes pack mappings. Future integration could read from the CRM to dynamically configure packs.
 
+## Harbor Ops API
+
+The Harbor Ops API (FastAPI) provides REST endpoints for pack management:
+
+- **Location:** `orchestrator/api.py`
+- **Start:** `python -m orchestrator api`
+- **Base URL:** http://127.0.0.1:8000
+- **Documentation:** See `orchestrator/README.md` for full API documentation
+
+**Key Endpoints:**
+- `POST /api/packs` - Create new pack
+- `PATCH /api/packs/{slug}/crm` - Update CRM fields
+- `POST /api/packs/{slug}/runs/research` - Run research pipeline
+- `GET /api/revenue/summary` - Get sales summary
+
+**Note:** The API is currently dev/local only. Production deployment is planned for a future release.
+
 ## Future Enhancements
 
 - [ ] Wire export into build process
-- [ ] Add API endpoints for pack operations
+- [x] Add API endpoints for pack operations (Harbor Ops API)
 - [ ] Add authentication for admin dashboard
-- [ ] Add pack editing UI (not just read-only)
+- [x] Add pack editing UI (New Idea form, Run Research button)
 - [ ] Integrate with Worker for dynamic pack configuration
 - [ ] Add audit trail / change history
 - [ ] Add pack validation rules

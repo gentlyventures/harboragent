@@ -1,0 +1,32 @@
+# Docker Compose configuration for Harbor Ops API on OVH
+# 
+# Usage:
+#   docker compose -f docker-compose.harbor_ops.yml up -d --build
+#   docker compose -f docker-compose.harbor_ops.yml down
+#
+# Data volumes are mounted to persist:
+# - pack-crm/data (packs.json)
+# - pack-crm/research (research reports)
+# - orchestrator/data/runs (run JSON files)
+# - revenue/data (revenue/leads data)
+
+version: '3.8'
+
+services:
+  harbor-ops-api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.harbor_ops
+    container_name: harbor-ops-api
+    restart: unless-stopped
+    ports:
+      - "80:8000"
+    env_file:
+      - ./harbor_ops.env
+    volumes:
+      # Mount data directories to persist outside container
+      - ../pack-crm/data:/app/pack-crm/data
+      - ../pack-crm/research:/app/pack-crm/research
+      - ../orchestrator/data/runs:/app/orchestrator/data/runs
+      - ../revenue/data:/app/revenue/data
+
