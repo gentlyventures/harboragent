@@ -217,13 +217,19 @@ class SimpleRLTrainer:
                 action_name = step.action
                 
                 # Update weight for this action in this bucket
-                bucket_weights = self.policy._get_bucket_weights(bucket_key)
+                # Access weights dict directly (it's public)
+                if bucket_key not in self.policy.weights:
+                    # Initialize bucket if needed
+                    from orchestrator.puppeteer.actions import list_all_actions
+                    all_actions = list_all_actions()
+                    self.policy.weights[bucket_key] = {
+                        action.value: 0.0 for action in all_actions
+                    }
+                
+                bucket_weights = self.policy.weights[bucket_key]
                 old_weight = bucket_weights.get(action_name, 0.0)
                 new_weight = old_weight + self.learning_rate * episode_reward
                 bucket_weights[action_name] = new_weight
-                
-                # Store in policy weights
-                self.policy.weights[bucket_key] = bucket_weights
                 updated_buckets.add(bucket_key)
         
         # Save updated weights

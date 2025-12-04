@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import PageMeta from '../components/PageMeta'
 import AdminLogin from '../components/AdminLogin'
+import AdminLayout from '../components/AdminLayout'
 
 // API base URL - configurable via environment variable
 // Dev: defaults to http://127.0.0.1:8000 (local Harbor Ops API)
@@ -815,15 +814,12 @@ export default function AdminPacksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <PageMeta
         title="Pack Admin — Harbor Agent"
         description="Pack lifecycle management dashboard"
       />
-      <Header />
-
-      <main className="section-padding">
-        <div className="container-custom">
+      <AdminLayout>
           <div className="mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Pack Admin Dashboard
@@ -895,9 +891,7 @@ export default function AdminPacksPage() {
             </div>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+      </AdminLayout>
+    </>
   )
 }

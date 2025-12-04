@@ -265,6 +265,126 @@ The Harbor Ops API can be deployed to an OVH VM using Docker. See `deploy/README
 3. Point `api.harboragent.dev` DNS to the VM
 4. Set `VITE_HARBOR_OPS_API_URL=https://api.harboragent.dev` in Cloudflare Pages
 
+## Puppeteer-style Harbor Orchestrator v1.0
+
+The orchestrator now includes a Puppeteer-style dynamic multi-agent router with logging, reward shaping, and a simple RL loop. This system provides:
+
+- **Dynamic agent routing**: Agents are selected dynamically based on policy (static, rule-based, or RL)
+- **Policy modes**: Choose between static (fixed sequence), rule-based (heuristic), or RL (learned) policies
+- **Telemetry**: Comprehensive logging of runs and steps for analysis and training
+- **Reward shaping**: Configurable rewards to guide RL training
+- **Portable core**: The Puppeteer core modules can be adapted to other projects by swapping adapters
+
+### Policy Modes
+
+1. **Static** (`"static"`): Fixed sequence based on current stage (baseline for comparison)
+2. **Rule-based** (`"rule"`): Heuristic routing using simple rules (default, safe, deterministic)
+3. **RL** (`"rl"`): Reinforcement learning policy that learns from experience
+
+### Data Locations
+
+- **Logs**: `orchestrator/data/logs/`
+  - `runs.jsonl`: Run-level events (start, end)
+  - `steps.jsonl`: Step-level events (action, state, reward)
+- **Policy weights**: `orchestrator/data/policy/weights.json` (for RL policy)
+
+### Running Dynamic Orchestration
+
+#### CLI
+
+```bash
+# Run with rule-based policy (default)
+python -m orchestrator run-pack-dynamic tax-assist --mode=rule
+
+# Run with RL policy
+python -m orchestrator run-pack-dynamic tax-assist --mode=rl --max-steps=30
+
+# Run with static policy
+python -m orchestrator run-pack-dynamic tax-assist --mode=static
+```
+
+#### API
+
+```bash
+# Run dynamic orchestration
+curl -X POST http://localhost:8000/api/packs/tax-assist/runs/dynamic \
+  -H "Content-Type: application/json" \
+  -d '{"policyMode": "rule", "maxSteps": 20}'
+
+# Train RL policy from logs
+curl -X POST http://localhost:8000/api/orchestrator/train?max_runs=50
+
+# Get recent logs
+curl http://localhost:8000/api/orchestrator/logs/runs?limit=20
+```
+
+### API Endpoints
+
+- **POST `/api/packs/{slug}/runs/dynamic`**: Run dynamic orchestration
+  - Request body: `{"policyMode": "rule" | "rl" | "static", "maxSteps": 20}`
+  - Returns: Run summary with actions, final_reward, steps_taken
+
+- **POST `/api/orchestrator/train`**: Train RL policy from logs
+  - Query param: `max_runs` (optional, limits number of runs to process)
+  - Returns: Training summary with total_runs, avg_reward, updated_buckets
+
+- **GET `/api/orchestrator/logs/runs`**: Get recent orchestration logs
+  - Query param: `limit` (optional, default: 20)
+  - Returns: List of run log entries (most recent first)
+
+### Architecture
+
+The Puppeteer system is organized into two main packages:
+
+#### `orchestrator/puppeteer/`
+
+- **`actions.py`**: Agent action definitions (INTAKE, RESEARCH, EVALUATE, etc.)
+- **`state_adapter.py`**: Converts between Harbor pack lifecycle and generic TaskState
+- **`policy_base.py`**: Policy interface and factory
+- **`policy_static.py`**: Static policy (fixed sequence)
+- **`policy_rule_based.py`**: Rule-based policy (heuristic routing)
+- **`policy_rl.py`**: RL policy (learned preferences)
+- **`executor.py`**: Maps actions to Harbor node execution
+- **`loop.py`**: Main orchestration loop runner
+
+#### `orchestrator/telemetry/`
+
+- **`logger.py`**: Logs runs and steps to JSONL files
+- **`reward.py`**: Reward shaping functions for steps and episodes
+- **`rl_trainer.py`**: Simple REINFORCE-style RL trainer
+
+### Training RL Policy
+
+The RL policy learns from logged runs:
+
+1. Run dynamic orchestration with `policyMode: "rule"` to generate logs
+2. Review logs to ensure quality
+3. Train RL policy: `POST /api/orchestrator/train`
+4. Use trained policy: `policyMode: "rl"` in subsequent runs
+
+The trainer uses a simple REINFORCE algorithm:
+- Loads run and step logs
+- Computes episode rewards
+- Updates action preferences based on returns
+- Saves weights to `orchestrator/data/policy/weights.json`
+
+### Portability
+
+The Puppeteer core is designed to be portable to other projects:
+
+- **Generic components**: `actions.py`, `policy_base.py`, `loop.py` are project-agnostic
+- **Adapters**: Project-specific logic lives in `state_adapter.py` and `executor.py`
+- **No circular imports**: Clean dependency structure (puppeteer -> telemetry, adapters at edges)
+
+To adapt to a new project:
+1. Implement new state adapters (similar to `harbor_pack_to_task_state`)
+2. Implement new executor (map actions to your project's operations)
+3. Keep the core Puppeteer modules unchanged
+
+### Legacy Behavior
+
+The existing `run_pack_research` function and fixed graph remain unchanged. The dynamic orchestration runs alongside the legacy system, allowing for gradual migration and comparison.
+
 ## See Also
 
 - `pack-crm/README.md` - Pack CRM module documentation

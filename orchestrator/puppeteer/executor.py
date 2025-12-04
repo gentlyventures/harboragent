@@ -10,7 +10,7 @@ from orchestrator.nodes.intake import intake_node
 from orchestrator.nodes.validation import validation_node
 from orchestrator.nodes.scoring_gate import scoring_gate_node
 from orchestrator.nodes.deep_research import deep_research_node
-from orchestrator.state import State, new_run_state
+from orchestrator.state import State
 
 
 class StepExecutor:

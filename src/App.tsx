@@ -4,6 +4,7 @@ import GenesisPack from './pages/GenesisPack'
 import TaxAssistPack from './pages/TaxAssistPack'
 import Success from './pages/Success'
 import AdminPacksPage from './pages/AdminPacksPage'
+import AutomationsPage from './pages/AutomationsPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/packs/tax-assist" element={<TaxAssistPack />} />
         <Route path="/success" element={<Success />} />
         <Route path="/admin" element={<AdminPacksPage />} />
+        <Route path="/admin/automations" element={<AutomationsPage />} />
       </Routes>
     </Router>
   )

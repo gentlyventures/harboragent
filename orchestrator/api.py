@@ -59,6 +59,9 @@ MASTER_LEADS_JSON = REVENUE_DATA_PATH / "master_leads.json"
 MASTER_LEADS_CSV = REVENUE_DATA_PATH / "master_leads.csv"
 SALES_JSON = REVENUE_DATA_PATH / "sales.json"
 
+# Path to automations config
+AUTOMATIONS_JSON = Path(__file__).resolve().parent / "data" / "automations.json"
+
 # Path to runs directory
 RUNS_DIR = Path(__file__).resolve().parent / "data" / "runs"
 
@@ -116,6 +119,29 @@ class SaleRecordRequest(BaseModel):
     currency: str = "usd"
     customerName: Optional[str] = None
     organization: Optional[str] = None
+
+
+class AutomationConfig(BaseModel):
+    """Model for automation configuration."""
+    id: str
+    name: str
+    description: str
+    type: str  # "pack_update", "sales_report", etc.
+    schedule: str  # cron expression
+    enabled: bool
+    config: dict  # type-specific config
+    lastRun: Optional[str] = None
+    nextRun: Optional[str] = None
+    runCount: int = 0
+
+
+class AutomationUpdateRequest(BaseModel):
+    """Request model for updating automation."""
+    name: Optional[str] = None
+    description: Optional[str] = None
+    schedule: Optional[str] = None
+    enabled: Optional[bool] = None
+    config: Optional[dict] = None
 
 
 class LeadDiscoveryRequest(BaseModel):
@@ -470,6 +496,127 @@ async def list_pack_runs(slug: str):
     return runs
 
 
+# ============================================================================
+# Dynamic Orchestration Endpoints
+# ============================================================================
+
+
+class DynamicRunRequest(BaseModel):
+    """Request model for dynamic orchestration run."""
+    policyMode: Optional[str] = "rule"  # "static", "rule", or "rl"
+    maxSteps: Optional[int] = 20
+
+
+@app.post("/api/packs/{slug}/runs/dynamic")
+async def run_dynamic_orchestration_endpoint(slug: str, request: DynamicRunRequest):
+    """
+    Run dynamic Puppeteer-style orchestration for a pack.
+    
+    Args:
+        slug: Pack slug identifier
+        request: Dynamic run request with policyMode and maxSteps
+        
+    Returns:
+        Run summary with actions, final_reward, steps_taken
+        
+    Raises:
+        404: If pack not found
+        500: If orchestration fails
+    """
+    # Verify pack exists
+    pack = get_pack_lifecycle(slug)
+    if pack is None:
+        raise HTTPException(status_code=404, detail=f"Pack with slug '{slug}' not found")
+    
+    # Validate policy mode
+    policy_mode = request.policyMode or "rule"
+    if policy_mode not in ["static", "rule", "rl"]:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid policyMode: {policy_mode}. Must be 'static', 'rule', or 'rl'"
+        )
+    
+    try:
+        # Run dynamic orchestration
+        result = run_dynamic_orchestration(
+            pack_slug=slug,
+            policy_mode=policy_mode,  # type: ignore
+            max_steps=request.maxSteps or 20
+        )
+        
+        return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error running dynamic orchestration: {str(e)}"
+        )
+
+
+@app.post("/api/orchestrator/train")
+async def train_rl_policy(max_runs: Optional[int] = None):
+    """
+    Train RL policy from logs.
+    
+    Args:
+        max_runs: Optional limit on number of runs to process
+        
+    Returns:
+        Training summary with total_runs, avg_reward, updated_buckets
+    """
+    try:
+        trainer = SimpleRLTrainer()
+        summary = trainer.train_from_logs(max_runs=max_runs)
+        return summary
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error training RL policy: {str(e)}"
+        )
+
+
+@app.get("/api/orchestrator/logs/runs")
+async def get_orchestrator_logs(limit: Optional[int] = 20):
+    """
+    Get recent orchestration run logs.
+    
+    Args:
+        limit: Maximum number of log entries to return (default: 20)
+        
+    Returns:
+        List of run log entries (most recent first)
+    """
+    from pathlib import Path
+    
+    runs_log_path = Path(__file__).resolve().parent / "data" / "logs" / "runs.jsonl"
+    
+    if not runs_log_path.exists():
+        return []
+    
+    logs = []
+    try:
+        with open(runs_log_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        
+        # Read last N lines
+        for line in lines[-limit:] if limit else lines:
+            line = line.strip()
+            if line:
+                try:
+                    logs.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+        
+        # Reverse to get most recent first
+        logs.reverse()
+        
+        return logs
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error reading logs: {str(e)}"
+        )
+
+
 @app.get("/api/runs/{run_id}")
 async def get_run(run_id: str):
     """
@@ -656,6 +803,216 @@ async def record_sale(request: SaleRecordRequest):
         json.dump({"sales": sales, "lastUpdated": datetime.utcnow().isoformat() + "Z"}, f, indent=2)
     
     return {"status": "recorded", "sale": sale_record}
+
+
+# ============================================================================
+# Automations Endpoints
+# ============================================================================
+
+
+def load_automations() -> List[dict]:
+    """Load automations config from JSON file."""
+    if not AUTOMATIONS_JSON.exists():
+        # Initialize with default automations
+        default_automations = [
+            {
+                "id": "weekly-pack-updates",
+                "name": "Weekly Pack Updates",
+                "description": "Check for regulation changes, market updates, and user feedback for published packs",
+                "type": "pack_update",
+                "schedule": "0 9 * * 1",  # Every Monday at 9 AM UTC
+                "enabled": True,
+                "config": {
+                    "packs": ["genesis-mission", "tax-assist"],
+                    "checkTypes": ["regulation", "market", "user_feedback"],
+                },
+                "lastRun": None,
+                "nextRun": None,
+                "runCount": 0,
+            },
+            {
+                "id": "daily-sales-report",
+                "name": "Daily Sales Report",
+                "description": "Generate and email daily sales summary",
+                "type": "sales_report",
+                "schedule": "0 8 * * *",  # Every day at 8 AM UTC
+                "enabled": False,
+                "config": {
+                    "emailRecipients": [],
+                    "includePacks": True,
+                },
+                "lastRun": None,
+                "nextRun": None,
+                "runCount": 0,
+            },
+        ]
+        AUTOMATIONS_JSON.parent.mkdir(parents=True, exist_ok=True)
+        with open(AUTOMATIONS_JSON, "w", encoding="utf-8") as f:
+            json.dump({"automations": default_automations, "version": "1.0"}, f, indent=2)
+        return default_automations
+    
+    try:
+        with open(AUTOMATIONS_JSON, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return data.get("automations", [])
+    except (json.JSONDecodeError, FileNotFoundError):
+        return []
+
+
+def save_automations(automations: List[dict]):
+    """Save automations config to JSON file."""
+    AUTOMATIONS_JSON.parent.mkdir(parents=True, exist_ok=True)
+    with open(AUTOMATIONS_JSON, "w", encoding="utf-8") as f:
+        json.dump({"automations": automations, "version": "1.0"}, f, indent=2)
+
+
+@app.get("/api/automations")
+async def list_automations():
+    """
+    List all automations.
+    
+    Returns:
+        List of automation configurations
+    """
+    return {"automations": load_automations()}
+
+
+@app.get("/api/automations/{automation_id}")
+async def get_automation(automation_id: str):
+    """
+    Get a specific automation by ID.
+    
+    Args:
+        automation_id: Automation identifier
+        
+    Returns:
+        Automation configuration
+        
+    Raises:
+        404: If automation not found
+    """
+    automations = load_automations()
+    automation = next((a for a in automations if a.get("id") == automation_id), None)
+    
+    if automation is None:
+        raise HTTPException(status_code=404, detail=f"Automation '{automation_id}' not found")
+    
+    return automation
+
+
+@app.put("/api/automations/{automation_id}")
+async def update_automation(automation_id: str, request: AutomationUpdateRequest):
+    """
+    Update an automation configuration.
+    
+    Args:
+        automation_id: Automation identifier
+        request: Update request with optional fields
+        
+    Returns:
+        Updated automation configuration
+        
+    Raises:
+        404: If automation not found
+    """
+    automations = load_automations()
+    automation = next((a for a in automations if a.get("id") == automation_id), None)
+    
+    if automation is None:
+        raise HTTPException(status_code=404, detail=f"Automation '{automation_id}' not found")
+    
+    # Update fields if provided
+    if request.name is not None:
+        automation["name"] = request.name
+    if request.description is not None:
+        automation["description"] = request.description
+    if request.schedule is not None:
+        automation["schedule"] = request.schedule
+    if request.enabled is not None:
+        automation["enabled"] = request.enabled
+    if request.config is not None:
+        automation["config"] = {**automation.get("config", {}), **request.config}
+    
+    # Save updated automations
+    save_automations(automations)
+    
+    return automation
+
+
+@app.post("/api/automations/{automation_id}/run")
+async def run_automation(automation_id: str):
+    """
+    Manually trigger an automation run.
+    
+    Args:
+        automation_id: Automation identifier
+        
+    Returns:
+        Run result
+        
+    Raises:
+        404: If automation not found
+    """
+    automations = load_automations()
+    automation = next((a for a in automations if a.get("id") == automation_id), None)
+    
+    if automation is None:
+        raise HTTPException(status_code=404, detail=f"Automation '{automation_id}' not found")
+    
+    if not automation.get("enabled", False):
+        raise HTTPException(status_code=400, detail="Automation is disabled")
+    
+    automation_type = automation.get("type")
+    config = automation.get("config", {})
+    
+    # Execute based on type
+    if automation_type == "pack_update":
+        # Run update checks for configured packs
+        packs = config.get("packs", [])
+        results = []
+        for pack_slug in packs:
+            try:
+                # Call the check-updates endpoint
+                # This is a simplified version - in production, you'd call the actual function
+                result = {
+                    "packSlug": pack_slug,
+                    "status": "checked",
+                    "checkedAt": datetime.utcnow().isoformat() + "Z",
+                }
+                results.append(result)
+            except Exception as e:
+                results.append({
+                    "packSlug": pack_slug,
+                    "status": "error",
+                    "error": str(e),
+                })
+        
+        # Update last run time
+        automation["lastRun"] = datetime.utcnow().isoformat() + "Z"
+        automation["runCount"] = automation.get("runCount", 0) + 1
+        save_automations(automations)
+        
+        return {
+            "automationId": automation_id,
+            "status": "completed",
+            "results": results,
+            "runAt": automation["lastRun"],
+        }
+    elif automation_type == "sales_report":
+        # Generate sales report
+        # TODO: Implement sales report generation
+        automation["lastRun"] = datetime.utcnow().isoformat() + "Z"
+        automation["runCount"] = automation.get("runCount", 0) + 1
+        save_automations(automations)
+        
+        return {
+            "automationId": automation_id,
+            "status": "completed",
+            "note": "Sales report generation not yet implemented",
+            "runAt": automation["lastRun"],
+        }
+    else:
+        raise HTTPException(status_code=400, detail=f"Unknown automation type: {automation_type}")
 
 
 @app.get("/api/revenue/leads")

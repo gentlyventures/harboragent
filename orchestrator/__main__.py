@@ -9,6 +9,8 @@ Usage:
 import sys
 import typer
 from orchestrator.graph import run_pack_research
+from orchestrator.puppeteer.loop import run_dynamic_orchestration
+from orchestrator.puppeteer.policy_base import PolicyMode
 
 app = typer.Typer(help="Harbor Agent Pack Research Orchestrator")
 
@@ -50,6 +52,59 @@ def run_pack(
             print("\nDeep Dive Report: Not generated (scoring gate did not pass)")
         
         print(f"\nRun State: orchestrator/data/runs/{final_state['run_id']}.json")
+        print()
+        
+    except ValueError as e:
+        typer.echo(f"❌ Error: {e}", err=True)
+        sys.exit(1)
+    except Exception as e:
+        typer.echo(f"❌ Unexpected error: {e}", err=True)
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+
+
+@app.command()
+def run_pack_dynamic(
+    slug: str = typer.Argument(..., help="Pack slug (e.g., 'tax-assist')"),
+    mode: str = typer.Option("rule", help="Policy mode: 'static', 'rule', or 'rl'"),
+    max_steps: int = typer.Option(20, help="Maximum number of steps"),
+):
+    """
+    Run dynamic Puppeteer-style orchestration for a pack.
+    
+    Example:
+        python -m orchestrator run-pack-dynamic tax-assist --mode=rule
+        python -m orchestrator run-pack-dynamic tax-assist --mode=rl --max-steps=30
+    """
+    if mode not in ["static", "rule", "rl"]:
+        typer.echo(f"❌ Error: Invalid mode '{mode}'. Must be 'static', 'rule', or 'rl'", err=True)
+        sys.exit(1)
+    
+    try:
+        result = run_dynamic_orchestration(
+            pack_slug=slug,
+            policy_mode=mode,  # type: ignore
+            max_steps=max_steps
+        )
+        
+        # Print summary
+        print("\n" + "=" * 60)
+        print("Dynamic Orchestration Summary")
+        print("=" * 60)
+        print(f"Run ID: {result['run_id']}")
+        print(f"Pack Slug: {result['pack_slug']}")
+        print(f"Policy Mode: {result['policy_mode']}")
+        print(f"Steps Taken: {result['steps_taken']}")
+        print(f"Final Reward: {result['final_reward']:.4f}")
+        print(f"Success: {result['success']}")
+        print(f"\nActions Taken:")
+        for i, action in enumerate(result['actions'], 1):
+            print(f"  {i}. {action}")
+        
+        if result.get("error"):
+            print(f"\nError: {result['error']}")
+        
         print()
         
     except ValueError as e:
