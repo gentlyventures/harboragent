@@ -62,6 +62,15 @@ node_modules/
 /docs/deployment/
 /setup-stripe-webhook.sh
 
+# SSH keys and credentials
+.ssh/
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+id_ecdsa*
+*.pub
+
 # OS files
 .DS_Store
 Thumbs.db
