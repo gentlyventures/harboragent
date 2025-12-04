@@ -62,6 +62,9 @@ SALES_JSON = REVENUE_DATA_PATH / "sales.json"
 # Path to automations config
 AUTOMATIONS_JSON = Path(__file__).resolve().parent / "data" / "automations.json"
 
+# Sales JSON path (in revenue/data for consistency with revenue module)
+SALES_JSON = REVENUE_DATA_PATH / "sales.json"
+
 # Path to runs directory
 RUNS_DIR = Path(__file__).resolve().parent / "data" / "runs"
 
@@ -798,7 +801,10 @@ async def record_sale(request: SaleRecordRequest):
     sales.append(sale_record)
     
     # Save to JSON file
-    SALES_JSON.parent.mkdir(parents=True, exist_ok=True)
+    # Ensure parent directory exists
+    sales_dir = SALES_JSON.parent
+    sales_dir.mkdir(parents=True, exist_ok=True)
+    
     with open(SALES_JSON, "w", encoding="utf-8") as f:
         json.dump({"sales": sales, "lastUpdated": datetime.utcnow().isoformat() + "Z"}, f, indent=2)
     
