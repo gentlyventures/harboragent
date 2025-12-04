@@ -144,6 +144,58 @@ def api(
     )
 
 
+@app.command()
+def generate_dynamic_runs(
+    pack_slug: str = typer.Argument(..., help="Pack slug (e.g., 'tax-assist')"),
+    mode: str = typer.Option("rule", help="Policy mode: 'static', 'rule', or 'rl'"),
+    runs: int = typer.Option(20, help="Number of runs to generate"),
+    max_steps: int = typer.Option(20, help="Maximum steps per run"),
+):
+    """
+    Generate multiple dynamic orchestration runs to seed logs for RL training.
+    
+    This is useful for quickly generating training data without manual loops.
+    
+    Example:
+        python -m orchestrator generate-dynamic-runs tax-assist --mode rule --runs 20 --max-steps 20
+    """
+    if mode not in ["static", "rule", "rl"]:
+        typer.echo(f"❌ Error: Invalid mode '{mode}'. Must be 'static', 'rule', or 'rl'", err=True)
+        sys.exit(1)
+    
+    typer.echo(f"Generating {runs} dynamic orchestration runs for pack '{pack_slug}'...")
+    typer.echo(f"Mode: {mode}, Max steps per run: {max_steps}")
+    typer.echo()
+    
+    successful_runs = 0
+    failed_runs = 0
+    
+    for i in range(runs):
+        try:
+            result = run_dynamic_orchestration(
+                pack_slug=pack_slug,
+                policy_mode=mode,  # type: ignore
+                max_steps=max_steps
+            )
+            
+            if result.get("error"):
+                failed_runs += 1
+                typer.echo(f"  Run {i + 1}/{runs}: ❌ Failed - {result.get('error')}")
+            else:
+                successful_runs += 1
+                typer.echo(
+                    f"  Run {i + 1}/{runs}: ✓ Steps={result.get('steps_taken', 0)}, "
+                    f"Reward={result.get('final_reward', 0):.3f}"
+                )
+        except Exception as e:
+            failed_runs += 1
+            typer.echo(f"  Run {i + 1}/{runs}: ❌ Exception - {str(e)}")
+    
+    typer.echo()
+    typer.echo(f"✅ Completed: {successful_runs} successful, {failed_runs} failed")
+    typer.echo(f"   Logs saved to orchestrator/data/logs/")
+
+
 if __name__ == "__main__":
     app()
 

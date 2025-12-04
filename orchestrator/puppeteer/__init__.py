@@ -11,7 +11,12 @@ from orchestrator.puppeteer.actions import AgentAction, list_all_actions, is_ter
 from orchestrator.puppeteer.state_adapter import TaskState, harbor_pack_to_task_state, update_states_from_action
 from orchestrator.puppeteer.policy_base import PuppeteerPolicy, PolicyMode, make_policy
 from orchestrator.puppeteer.executor import StepExecutor
-from orchestrator.puppeteer.loop import run_dynamic_orchestration
+
+# Lazy import to avoid circular dependency
+def run_dynamic_orchestration(*args, **kwargs):
+    """Lazy import wrapper to avoid circular dependency."""
+    from orchestrator.puppeteer.loop import run_dynamic_orchestration as _run_dynamic_orchestration
+    return _run_dynamic_orchestration(*args, **kwargs)
 
 __all__ = [
     "AgentAction",

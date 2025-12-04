@@ -322,15 +322,70 @@ curl http://localhost:8000/api/orchestrator/logs/runs?limit=20
 
 - **POST `/api/packs/{slug}/runs/dynamic`**: Run dynamic orchestration
   - Request body: `{"policyMode": "rule" | "rl" | "static", "maxSteps": 20}`
-  - Returns: Run summary with actions, final_reward, steps_taken
+  - Returns: Run summary with actions, final_reward, steps_taken, pack_slug
 
 - **POST `/api/orchestrator/train`**: Train RL policy from logs
   - Query param: `max_runs` (optional, limits number of runs to process)
-  - Returns: Training summary with total_runs, avg_reward, updated_buckets
+  - Returns: Training summary with total_runs_used, avg_episode_reward, number_of_buckets_updated, policy_mode_distribution
 
 - **GET `/api/orchestrator/logs/runs`**: Get recent orchestration logs
   - Query param: `limit` (optional, default: 20)
   - Returns: List of run log entries (most recent first)
+
+### Exercising Puppeteer Orchestrator
+
+#### Generate Rule-Based Runs (to Seed Logs)
+
+Quickly generate multiple runs for RL training:
+
+```bash
+# Generate 20 rule-based runs for tax-assist pack
+python -m orchestrator generate-dynamic-runs tax-assist --mode rule --runs 20 --max-steps 20
+
+# Generate 50 runs with RL policy (after initial training)
+python -m orchestrator generate-dynamic-runs tax-assist --mode rl --runs 50 --max-steps 30
+```
+
+This command:
+- Runs dynamic orchestration N times for the specified pack
+- Logs all runs and steps to `orchestrator/data/logs/`
+- Prints progress and summary statistics
+- Useful for seeding training data without manual loops
+
+#### Train RL from Logs
+
+After generating runs, train the RL policy:
+
+```bash
+# Train from all available logs
+python -m orchestrator api
+# Then in another terminal:
+curl -X POST "http://localhost:8000/api/orchestrator/train?max_runs=50"
+```
+
+Or use the Admin UI at `/admin`:
+- Click "Train RL Policy from Logs" button
+- View training summary with runs used, avg reward, buckets updated
+
+#### Run RL-Mode Orchestrations
+
+After training, use the learned policy:
+
+```bash
+# CLI
+python -m orchestrator run-pack-dynamic tax-assist --mode=rl --max-steps=30
+
+# API
+curl -X POST "http://localhost:8000/api/packs/tax-assist/runs/dynamic" \
+  -H "Content-Type: application/json" \
+  -d '{"policyMode": "rl", "maxSteps": 30}'
+```
+
+Or use the Admin UI:
+- Expand a pack card
+- Use "Dynamic Orchestration" section
+- Select "RL (learned)" policy mode
+- Click "Run Dynamic Orchestration"
 
 ### Architecture
 
@@ -364,9 +419,21 @@ The RL policy learns from logged runs:
 
 The trainer uses a simple REINFORCE algorithm:
 - Loads run and step logs
-- Computes episode rewards
+- Computes episode rewards (including CRM-aware bonuses)
 - Updates action preferences based on returns
 - Saves weights to `orchestrator/data/policy/weights.json`
+
+#### CRM-Aware Reward Shaping
+
+Episode rewards now include commercial signals from CRM data:
+- **Sales bonus**: Packs with sales receive a reward boost (0.5 per sale, capped at 5 sales)
+- **Pipeline bonus**: Packs with advanced pipeline stages (proposal, purchased, qualified) receive additional reward multipliers
+
+These bonuses are computed from:
+- `revenue/data/sales.json` - Sale records by pack slug
+- `revenue/data/master_leads.json` - Lead pipeline stages by pack
+
+The reward computation gracefully handles missing CRM files (treats as 0/None).
 
 ### Portability
 

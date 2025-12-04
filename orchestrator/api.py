@@ -558,10 +558,11 @@ async def train_rl_policy(max_runs: Optional[int] = None):
     Train RL policy from logs.
     
     Args:
-        max_runs: Optional limit on number of runs to process
+        max_runs: Optional query parameter limit on number of runs to process
         
     Returns:
-        Training summary with total_runs, avg_reward, updated_buckets
+        Training summary with total_runs, avg_reward, avg_episode_reward, 
+        updated_buckets, number_of_buckets_updated, policy_mode_distribution
     """
     try:
         trainer = SimpleRLTrainer()

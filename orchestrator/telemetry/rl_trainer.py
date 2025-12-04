@@ -164,7 +164,9 @@ class SimpleRLTrainer:
             return {
                 "total_runs": 0,
                 "avg_reward": 0.0,
+                "avg_episode_reward": 0.0,
                 "updated_buckets": 0,
+                "policy_mode_distribution": {},
                 "message": "No completed runs found in logs",
             }
         
@@ -184,12 +186,17 @@ class SimpleRLTrainer:
         # Process each run
         total_reward = 0.0
         updated_buckets = set()
+        policy_mode_counts: dict[str, int] = {}
         
         for run_record in completed_runs:
             run_id = run_record.run_id
             episode_reward = run_record.final_reward
             
             total_reward += episode_reward
+            
+            # Track policy mode distribution
+            policy_mode = run_record.policy_mode or "unknown"
+            policy_mode_counts[policy_mode] = policy_mode_counts.get(policy_mode, 0) + 1
             
             # Get steps for this run
             steps = steps_by_run.get(run_id, [])
@@ -237,10 +244,26 @@ class SimpleRLTrainer:
         
         avg_reward = total_reward / total_runs if total_runs > 0 else 0.0
         
+        # Log summary to stdout
+        print(f"\n{'=' * 60}")
+        print(f"RL Training Summary")
+        print(f"{'=' * 60}")
+        print(f"Total runs used: {total_runs}")
+        print(f"Average episode reward: {avg_reward:.4f}")
+        print(f"Buckets updated: {len(updated_buckets)}")
+        print(f"Policy mode distribution:")
+        for mode, count in policy_mode_counts.items():
+            print(f"  - {mode}: {count}")
+        print(f"{'=' * 60}\n")
+        
         return {
             "total_runs": total_runs,
+            "total_runs_used": total_runs,
             "avg_reward": avg_reward,
+            "avg_episode_reward": avg_reward,
             "updated_buckets": len(updated_buckets),
+            "number_of_buckets_updated": len(updated_buckets),
+            "policy_mode_distribution": policy_mode_counts,
             "message": f"Trained on {total_runs} runs, updated {len(updated_buckets)} buckets",
         }
 

@@ -126,10 +126,24 @@ interface PackCardProps {
   onRunResearch: (slug: string) => Promise<void>
 }
 
+interface DynamicRunSummary {
+  policy_mode: string
+  final_reward: number
+  steps_taken: number
+  actions: string[]
+}
+
 function PackCard({ pack, onRunResearch }: PackCardProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isRunningResearch, setIsRunningResearch] = useState(false)
   const [researchMessage, setResearchMessage] = useState<string | null>(null)
+  
+  // Dynamic orchestration state
+  const [policyMode, setPolicyMode] = useState<string>('rule')
+  const [maxSteps, setMaxSteps] = useState<number>(20)
+  const [isRunningDynamic, setIsRunningDynamic] = useState(false)
+  const [dynamicError, setDynamicError] = useState<string | null>(null)
+  const [lastDynamicRun, setLastDynamicRun] = useState<DynamicRunSummary | null>(null)
 
   const handleRunResearch = async () => {
     setIsRunningResearch(true)
@@ -142,6 +156,41 @@ function PackCard({ pack, onRunResearch }: PackCardProps) {
       setResearchMessage(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     } finally {
       setIsRunningResearch(false)
+    }
+  }
+
+  const handleRunDynamicOrchestration = async () => {
+    setIsRunningDynamic(true)
+    setDynamicError(null)
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/packs/${pack.slug}/runs/dynamic`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          policyMode: policyMode,
+          maxSteps: maxSteps,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }))
+        throw new Error(errorData.detail || `HTTP ${response.status}`)
+      }
+
+      const result = await response.json()
+      setLastDynamicRun({
+        policy_mode: result.policy_mode || policyMode,
+        final_reward: result.final_reward || 0,
+        steps_taken: result.steps_taken || 0,
+        actions: result.actions || [],
+      })
+    } catch (error) {
+      setDynamicError(error instanceof Error ? error.message : 'Unknown error')
+      console.error('Dynamic orchestration failed:', error)
+    } finally {
+      setIsRunningDynamic(false)
     }
   }
 
@@ -414,6 +463,98 @@ function PackCard({ pack, onRunResearch }: PackCardProps) {
               >
                 {pack.deployment.r2Uploaded ? '✓' : '○'} R2
               </span>
+            </div>
+          </div>
+
+          {/* Dynamic Orchestration */}
+          <div>
+            <h4 className="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wide">
+              Dynamic Orchestration
+            </h4>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Policy Mode
+                  </label>
+                  <select
+                    value={policyMode}
+                    onChange={(e) => setPolicyMode(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="rule">Rule-based (recommended)</option>
+                    <option value="rl">RL (learned)</option>
+                    <option value="static">Static (baseline)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Max Steps
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={maxSteps}
+                    onChange={(e) => setMaxSteps(parseInt(e.target.value) || 20)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleRunDynamicOrchestration()
+                }}
+                disabled={isRunningDynamic}
+                className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isRunningDynamic
+                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    : 'bg-purple-600 text-white hover:bg-purple-700'
+                }`}
+              >
+                {isRunningDynamic ? 'Running...' : 'Run Dynamic Orchestration'}
+              </button>
+              
+              {dynamicError && (
+                <div className="p-3 bg-red-50 text-red-800 rounded-lg border border-red-200 text-sm">
+                  Dynamic orchestration failed. See console for details.
+                </div>
+              )}
+
+              {lastDynamicRun ? (
+                <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                  <h5 className="text-sm font-semibold text-gray-900 mb-2">Last Dynamic Run</h5>
+                  <div className="space-y-1 text-sm">
+                    <div>
+                      <span className="text-gray-600">Policy:</span>{' '}
+                      <span className="font-medium text-gray-900">{lastDynamicRun.policy_mode}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Final reward:</span>{' '}
+                      <span className="font-medium text-gray-900">
+                        {lastDynamicRun.final_reward.toFixed(3)}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Steps taken:</span>{' '}
+                      <span className="font-medium text-gray-900">{lastDynamicRun.steps_taken}</span>
+                    </div>
+                    {lastDynamicRun.actions.length > 0 && (
+                      <div>
+                        <span className="text-gray-600">Actions:</span>{' '}
+                        <span className="font-medium text-gray-900">
+                          {lastDynamicRun.actions.join(' → ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm text-gray-500 italic">
+                  No dynamic runs yet.
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -741,6 +882,10 @@ export default function AdminPacksPage() {
   const [isLoadingPacks, setIsLoadingPacks] = useState(true)
   const [apiError, setApiError] = useState<string | null>(null)
   const [revenueSummary, setRevenueSummary] = useState<RevenueSummary | null>(null)
+  
+  // RL training state
+  const [isTrainingRL, setIsTrainingRL] = useState(false)
+  const [trainingMessage, setTrainingMessage] = useState<string | null>(null)
 
   const fetchPacks = async () => {
     setIsLoadingPacks(true)
@@ -809,6 +954,37 @@ export default function AdminPacksPage() {
     return result
   }
 
+  const handleTrainRL = async () => {
+    setIsTrainingRL(true)
+    setTrainingMessage(null)
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/orchestrator/train?max_runs=50`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ detail: 'Unknown error' }))
+        throw new Error(errorData.detail || `HTTP ${response.status}`)
+      }
+
+      const summary = await response.json()
+      const runsUsed = summary.total_runs_used || summary.total_runs || 0
+      const avgReward = summary.avg_episode_reward || summary.avg_reward || 0
+      setTrainingMessage(
+        `Trained RL policy: used ${runsUsed} runs, avg reward ${avgReward.toFixed(3)}`
+      )
+      setTimeout(() => setTrainingMessage(null), 10000)
+    } catch (error) {
+      setTrainingMessage('Training failed, see console')
+      console.error('RL training error:', error)
+    } finally {
+      setIsTrainingRL(false)
+    }
+  }
+
   if (!isAuthenticated) {
     return <AdminLogin onAuthSuccess={() => setIsAuthenticated(true)} />
   }
@@ -827,6 +1003,35 @@ export default function AdminPacksPage() {
             <p className="text-xl text-gray-600">
               View and manage pack lifecycle status and CRM data
             </p>
+          </div>
+
+          {/* Orchestrator Training */}
+          <div className="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Orchestrator Training</h2>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleTrainRL}
+                disabled={isTrainingRL}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isTrainingRL
+                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    : 'bg-purple-600 text-white hover:bg-purple-700'
+                }`}
+              >
+                {isTrainingRL ? 'Training...' : 'Train RL Policy from Logs'}
+              </button>
+              {trainingMessage && (
+                <div
+                  className={`text-sm ${
+                    trainingMessage.startsWith('Trained')
+                      ? 'text-green-700'
+                      : 'text-red-700'
+                  }`}
+                >
+                  {trainingMessage}
+                </div>
+              )}
+            </div>
           </div>
 
           {apiError && (
@@ -890,7 +1095,6 @@ export default function AdminPacksPage() {
               </div>
             </div>
           </div>
-        </div>
       </AdminLayout>
     </>
   )

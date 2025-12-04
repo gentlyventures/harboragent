@@ -9,9 +9,11 @@ Logs are written to:
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Any
-from orchestrator.puppeteer.actions import AgentAction
-from orchestrator.puppeteer.state_adapter import TaskState
+from typing import Any, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from orchestrator.puppeteer.actions import AgentAction
+    from orchestrator.puppeteer.state_adapter import TaskState
 
 
 class OrchestratorLogger:
@@ -80,8 +82,8 @@ class OrchestratorLogger:
         self,
         run_id: str,
         step_index: int,
-        action: AgentAction,
-        state: TaskState,
+        action: "AgentAction",
+        state: "TaskState",
         tokens_used: int,
         local_reward: float
     ) -> None:
@@ -96,6 +98,10 @@ class OrchestratorLogger:
             tokens_used: Tokens used in this step
             local_reward: Reward for this step
         """
+        # Import here to avoid circular dependency
+        from orchestrator.puppeteer.actions import AgentAction
+        from orchestrator.puppeteer.state_adapter import TaskState
+        
         record = {
             "event": "step",
             "run_id": run_id,
