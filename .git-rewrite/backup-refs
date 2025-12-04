@@ -1,0 +1,6 @@
+d39895a39627e8828f55e2599276631d13c58605 commit	refs/heads/main
+feb6f3798f9b639a106ca37992e6ba0d4bcc1895 commit	refs/remotes/origin/HEAD
+feb6f3798f9b639a106ca37992e6ba0d4bcc1895 commit	refs/remotes/origin/main
+e6e103fdf3eab195ccf66a67bba450a6ad59c6a7 commit	refs/stash
+6cc8ccc40655d57825ef3ec836efa9afb5caf9d6 commit	refs/tags/v1.0.0
+2f49385fcbfb7d0b75e1071220c890fb1ad0cae3 commit	refs/tags/v1.0.0-tax-assist

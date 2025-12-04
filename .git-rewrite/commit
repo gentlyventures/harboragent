@@ -1,0 +1,13 @@
+tree d3624c206f7af85537dd199aa37989904541ee15
+parent 97e86032fb2c5b9e8800bd4bc1840f325c38e3c0
+author Dave Weinberg <dave@gentlyventures.com> 1764531136 -0500
+committer Dave Weinberg <dave@gentlyventures.com> 1764531136 -0500
+
+Add comprehensive one-shot implementation prompt for Gently Ventures
+
+- Complete component structure following audit patterns
+- Hero, Tier Comparison, How It Works, FAQ components
+- Supabase Edge Function for Stripe checkout
+- Routing and navigation updates
+- Design system compliance
+- Ready for Lovable implementation

@@ -1,0 +1,8 @@
+Add comprehensive one-shot implementation prompt for Gently Ventures
+
+- Complete component structure following audit patterns
+- Hero, Tier Comparison, How It Works, FAQ components
+- Supabase Edge Function for Stripe checkout
+- Routing and navigation updates
+- Design system compliance
+- Ready for Lovable implementation
