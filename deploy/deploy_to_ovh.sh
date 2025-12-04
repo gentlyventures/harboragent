@@ -142,6 +142,17 @@ rsync -avz --delete \
     "${REPO_ROOT}/revenue/" \
     "${SSH_TARGET}:${DEPLOY_DIR}/revenue/"
 
+# Sync packs.json separately (preserve server data if it exists, but ensure local is available)
+if [ -f "${REPO_ROOT}/pack-crm/data/packs.json" ]; then
+    echo "  - pack-crm/data/packs.json (syncing from local)"
+    rsync -avz \
+        -e "${RSYNC_SSH}" \
+        "${REPO_ROOT}/pack-crm/data/packs.json" \
+        "${SSH_TARGET}:${DEPLOY_DIR}/pack-crm/data/packs.json"
+else
+    echo "  - pack-crm/data/packs.json (local file not found, skipping)"
+fi
+
 echo "  - deploy/"
 rsync -avz \
     -e "${RSYNC_SSH}" \

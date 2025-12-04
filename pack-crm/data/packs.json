@@ -1,0 +1,173 @@
+[
+  {
+    "slug": "genesis-mission",
+    "name": "Genesis Mission Readiness Pack",
+    "packNumber": 1,
+    "currentStage": "published",
+    "stages": {
+      "idea": {
+        "status": "completed",
+        "startedAt": "2024-01-01T00:00:00.000Z",
+        "completedAt": "2024-01-15T00:00:00.000Z"
+      },
+      "validation": {
+        "status": "completed",
+        "startedAt": "2024-01-15T00:00:00.000Z",
+        "completedAt": "2024-02-01T00:00:00.000Z"
+      },
+      "scoring": {
+        "status": "completed",
+        "startedAt": "2024-02-01T00:00:00.000Z",
+        "completedAt": "2024-02-15T00:00:00.000Z",
+        "score": 85,
+        "gate": "pass"
+      },
+      "deep_dive": {
+        "status": "completed",
+        "startedAt": "2024-02-15T00:00:00.000Z",
+        "completedAt": "2024-03-01T00:00:00.000Z"
+      },
+      "build": {
+        "status": "completed",
+        "startedAt": "2024-03-01T00:00:00.000Z",
+        "completedAt": "2024-03-15T00:00:00.000Z"
+      },
+      "published": {
+        "status": "completed",
+        "startedAt": "2024-03-15T00:00:00.000Z",
+        "completedAt": "2024-03-20T00:00:00.000Z",
+        "publishedAt": "2024-03-20T00:00:00.000Z"
+      }
+    },
+    "metadata": {
+      "regulationName": "Genesis Mission (U.S. Department of Energy)",
+      "targetAudience": [
+        "Energy-sector software vendors",
+        "Grid operations technology providers",
+        "Applied AI companies",
+        "Scientific computing partners",
+        "Federal contractors",
+        "Industrial R&D teams (materials, climate, fusion, power)"
+      ],
+      "price": 19900,
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-03-20T00:00:00.000Z"
+    },
+    "research": {
+      "researchCompleted": true,
+      "researchArtifacts": [],
+      "researchNotes": "Initial research completed via ChatGPT template"
+    },
+    "deployment": {
+      "frontendDeployed": true,
+      "workerDeployed": true,
+      "stripeConfigured": true,
+      "r2Uploaded": true
+    },
+    "crm": {
+      "ideaNotes": "DOE Genesis Mission represents a major alignment point for AI-native engineering teams. Need to create a comprehensive readiness pack that helps teams prepare for potential participation, collaboration, and integration requests. Focus on developer-ready artifacts and AI-copilot friendly workflows.",
+      "icpSummary": "Energy-sector software vendors, grid operations technology providers, applied AI companies, scientific computing partners, federal contractors, and industrial R&D teams working in materials, climate, fusion, and power sectors.",
+      "primaryPainPoints": [
+        "Lack of structured readiness frameworks for Genesis Mission participation",
+        "Unclear technical requirements and integration points",
+        "Missing developer-ready compliance templates and automation",
+        "No AI-copilot friendly workflows for Genesis alignment",
+        "Gap between policy requirements and engineering implementation"
+      ],
+      "valueHypothesis": "Provides a complete toolkit that turns Genesis Mission requirements into actionable engineering artifacts, reducing preparation time from months to weeks and enabling AI-assisted compliance workflows.",
+      "pricingNotes": "$199 one-time purchase per organization. Positioned as a professional pack with free tier available on GitHub. Price point balances accessibility with value perception.",
+      "competitionNotes": "No direct competitors offering AI-native compliance packs for Genesis Mission. General compliance tools exist but lack the developer-focused, AI-copilot friendly approach. Opportunity to establish category leadership.",
+      "gateDecisionNotes": {
+        "validation": "Validated strong market need through initial research. Target audience clearly defined and accessible. Technical requirements well-documented by DOE.",
+        "scoring": "Score: 85/100. Strong value proposition, clear ICP, validated pain points. Gate: PASS. Ready for deep-dive research phase.",
+        "deep_dive": "Comprehensive research completed via ChatGPT template. All 16 sections generated with detailed technical overview, checklists, and AI copilot playbooks. Research artifacts ready for pack creation."
+      }
+    }
+  },
+  {
+    "slug": "tax-assist",
+    "name": "AI Tax Assistant Readiness Pack",
+    "packNumber": 2,
+    "currentStage": "published",
+    "stages": {
+      "idea": {
+        "status": "completed",
+        "startedAt": "2024-10-01T00:00:00.000Z",
+        "completedAt": "2024-10-15T00:00:00.000Z"
+      },
+      "validation": {
+        "status": "completed",
+        "startedAt": "2024-10-15T00:00:00.000Z",
+        "completedAt": "2024-11-01T00:00:00.000Z"
+      },
+      "scoring": {
+        "status": "completed",
+        "startedAt": "2024-11-01T00:00:00.000Z",
+        "completedAt": "2024-11-15T00:00:00.000Z",
+        "score": 90,
+        "gate": "pass"
+      },
+      "deep_dive": {
+        "status": "completed",
+        "startedAt": "2024-11-15T00:00:00.000Z",
+        "completedAt": "2024-12-01T00:00:00.000Z"
+      },
+      "build": {
+        "status": "completed",
+        "startedAt": "2024-12-01T00:00:00.000Z",
+        "completedAt": "2024-12-15T00:00:00.000Z"
+      },
+      "published": {
+        "status": "completed",
+        "startedAt": "2024-12-15T00:00:00.000Z",
+        "completedAt": "2024-12-20T00:00:00.000Z",
+        "publishedAt": "2024-12-20T00:00:00.000Z"
+      }
+    },
+    "metadata": {
+      "regulationName": "2025 U.S. Tax Year Requirements",
+      "targetAudience": [
+        "Individual tax preparers (CPAs, enrolled agents, tax professionals)",
+        "Tax preparation firms and practices",
+        "Software vendors building tax preparation tools",
+        "Accounting firms serving individual clients",
+        "Tax professionals handling pass-through entities (K-1s, partnerships, S-corps)"
+      ],
+      "price": 19900,
+      "createdAt": "2024-10-01T00:00:00.000Z",
+      "updatedAt": "2024-12-20T00:00:00.000Z"
+    },
+    "research": {
+      "researchCompleted": true,
+      "researchArtifacts": [],
+      "researchNotes": "Research completed for 2025 tax year readiness"
+    },
+    "deployment": {
+      "frontendDeployed": true,
+      "workerDeployed": true,
+      "stripeConfigured": true,
+      "r2Uploaded": true
+    },
+    "crm": {
+      "ideaNotes": "2025 tax year brings significant changes: new Form 1099-DA for digital assets, expanded e-filing requirements, inflation adjustments, and Direct File expansion. Individual tax preparers need systematic preparation tools. Opportunity to create AI-native tax readiness pack similar to Genesis structure.",
+      "icpSummary": "Individual tax preparers (CPAs, enrolled agents, tax professionals), tax preparation firms, software vendors building tax tools, accounting firms serving individual clients, and professionals handling pass-through entities.",
+      "primaryPainPoints": [
+        "Complex 2025 tax year changes require extensive research and preparation",
+        "New Form 1099-DA digital asset reporting requirements",
+        "Expanded e-filing mandates and thresholds",
+        "Lack of structured workflows for tax year readiness",
+        "Need for AI-assisted tax preparation workflows",
+        "Client communication challenges around new requirements"
+      ],
+      "valueHypothesis": "Provides comprehensive 2025 tax year readiness toolkit with checklists, form processing guides, AI copilot playbooks, and client communication templates. Reduces preparation time and ensures compliance with new requirements.",
+      "pricingNotes": "$199 one-time purchase per organization. Same pricing as Genesis pack for consistency. Targets professional tax preparers and firms who value structured workflows and AI-native tooling.",
+      "competitionNotes": "Traditional tax software (TurboTax, H&R Block) focuses on end-user filing, not preparer readiness. Tax research services exist but lack the developer-focused, AI-copilot approach. Opportunity in the preparer tooling market.",
+      "gateDecisionNotes": {
+        "validation": "Validated strong need through tax professional research. 2025 changes are well-documented by IRS. Target audience is clearly defined and accessible through professional networks.",
+        "scoring": "Score: 90/100. Excellent market fit, clear ICP, validated pain points, strong timing with 2025 tax year. Gate: PASS. Ready for deep-dive research phase.",
+        "deep_dive": "Comprehensive research completed covering all 2025 tax year changes, form requirements, e-filing mandates, and digital asset reporting. Research artifacts include detailed checklists and AI copilot playbooks for tax workflows."
+      }
+    }
+  }
+]
+

@@ -16,6 +16,7 @@ export interface Env {
   POSTMARK_FROM_EMAIL: string;
   POSTMARK_FROM_NAME: string;
   DOWNLOAD_SIGNING_KEY?: string; // Optional: HMAC key for signed links (defaults to STRIPE_SECRET_KEY)
+  HARBOR_OPS_API_URL?: string; // Optional: Harbor Ops API URL for sales tracking (defaults to https://api.harboragent.dev)
 }
 
 // CORS headers helper
@@ -590,6 +591,29 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
               },
               packInfo.packName
             );
+
+            // Record sale to Harbor Ops API for revenue tracking
+            const harborOpsApiUrl = env.HARBOR_OPS_API_URL || 'https://api.harboragent.dev';
+            try {
+              await fetch(`${harborOpsApiUrl}/api/revenue/sales`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  sessionId: session.id,
+                  packSlug: packInfo.packSlug || packSlug,
+                  customerEmail: customerEmail,
+                  amountTotal: session.amount_total || 0,
+                  currency: session.currency || 'usd',
+                  customerName: session.customer_details?.name || undefined,
+                  organization: session.customer_details?.name || undefined,
+                }),
+              });
+            } catch (error) {
+              // Log but don't fail the webhook if sales recording fails
+              console.error('Failed to record sale to Harbor Ops API:', error);
+            }
           } catch (error) {
             console.error('Failed to generate signed token, using unsigned link:', error);
             // Fallback to unsigned link

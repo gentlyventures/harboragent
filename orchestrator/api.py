@@ -28,6 +28,9 @@ from orchestrator.config import (
     OPENAI_API_KEY,
 )
 from orchestrator.state import save_run_state
+from orchestrator.puppeteer.loop import run_dynamic_orchestration
+from orchestrator.puppeteer.policy_base import PolicyMode
+from orchestrator.telemetry.rl_trainer import SimpleRLTrainer
 
 # Initialize OpenAI client
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
@@ -54,6 +57,7 @@ app.add_middleware(
 REVENUE_DATA_PATH = Path(__file__).resolve().parent.parent / "revenue" / "data"
 MASTER_LEADS_JSON = REVENUE_DATA_PATH / "master_leads.json"
 MASTER_LEADS_CSV = REVENUE_DATA_PATH / "master_leads.csv"
+SALES_JSON = REVENUE_DATA_PATH / "sales.json"
 
 # Path to runs directory
 RUNS_DIR = Path(__file__).resolve().parent / "data" / "runs"
@@ -101,6 +105,17 @@ class RevenueSummaryResponse(BaseModel):
     totalSales: Optional[int] = None
     packs: List[dict]
     note: Optional[str] = None
+
+
+class SaleRecordRequest(BaseModel):
+    """Request model for recording a Stripe sale."""
+    sessionId: str
+    packSlug: str
+    customerEmail: str
+    amountTotal: int  # in cents
+    currency: str = "usd"
+    customerName: Optional[str] = None
+    organization: Optional[str] = None
 
 
 class LeadDiscoveryRequest(BaseModel):
@@ -314,6 +329,68 @@ async def update_pack_crm(slug: str, request: PackCRMUpdateRequest):
 # ============================================================================
 
 
+@app.post("/api/packs/{slug}/check-updates")
+async def check_pack_updates(slug: str):
+    """
+    Check for updates to a published pack (regulations, market, users).
+    
+    This endpoint is designed to be called weekly via cron for published packs.
+    It checks for:
+    - Regulation/standard changes
+    - Market updates
+    - User feedback patterns
+    - Competitive landscape shifts
+    
+    Args:
+        slug: Pack slug identifier
+        
+    Returns:
+        Update check results with any changes found
+        
+    Raises:
+        404: If pack not found
+    """
+    # Verify pack exists
+    pack = get_pack_lifecycle(slug)
+    if pack is None:
+        raise HTTPException(status_code=404, detail=f"Pack with slug '{slug}' not found")
+    
+    # Only check updates for published or build-stage packs
+    if pack.get("currentStage") not in ["published", "build"]:
+        return {
+            "packSlug": slug,
+            "status": "skipped",
+            "reason": f"Pack is in '{pack.get('currentStage')}' stage. Updates only checked for published/build packs.",
+            "updates": [],
+        }
+    
+    # TODO: Implement actual update checks:
+    # 1. Check regulation/standard sources for changes
+    # 2. Monitor market trends (could use OpenAI to analyze recent news)
+    # 3. Aggregate user feedback (if we have a feedback mechanism)
+    # 4. Check competitive landscape
+    
+    # For now, return a placeholder structure
+    return {
+        "packSlug": slug,
+        "status": "checked",
+        "checkedAt": datetime.utcnow().isoformat() + "Z",
+        "updates": [
+            {
+                "type": "regulation",
+                "status": "no_changes",
+                "note": "Regulation check not yet implemented. Will check official sources.",
+            },
+            {
+                "type": "market",
+                "status": "no_changes",
+                "note": "Market trend analysis not yet implemented.",
+            },
+        ],
+        "note": "Update checking is a placeholder. Implement with actual sources (regulation sites, news APIs, etc.)",
+    }
+
+
 @app.post("/api/packs/{slug}/runs/research", response_model=ResearchRunResponse)
 async def run_research_pipeline(slug: str):
     """
@@ -480,9 +557,16 @@ async def get_revenue_summary():
     # Count total leads
     total_leads = len(leads_list)
     
-    # Try to extract sales (if there's a field indicating sales)
+    # Load sales data
     total_sales = None
-    # TODO: Implement sales extraction based on actual data structure
+    sales_data = []
+    if SALES_JSON.exists():
+        try:
+            with open(SALES_JSON, "r", encoding="utf-8") as f:
+                sales_data = json.load(f).get("sales", [])
+                total_sales = len(sales_data)
+        except (json.JSONDecodeError, FileNotFoundError):
+            pass
     
     # Group by pack (if there's a packSlug or similar field)
     pack_counts = {}
@@ -492,12 +576,26 @@ async def get_revenue_summary():
             pack_slug = lead.get("packSlug") or lead.get("pack_slug") or lead.get("pack")
             if pack_slug:
                 if pack_slug not in pack_counts:
-                    pack_counts[pack_slug] = {"leads": 0, "sales": 0}
+                    pack_counts[pack_slug] = {"leads": 0, "sales": 0, "revenue": 0}
                 pack_counts[pack_slug]["leads"] += 1
-                # TODO: Count sales if field exists
+    
+    # Add sales data to pack counts
+    for sale in sales_data:
+        if isinstance(sale, dict):
+            pack_slug = sale.get("packSlug")
+            if pack_slug:
+                if pack_slug not in pack_counts:
+                    pack_counts[pack_slug] = {"leads": 0, "sales": 0, "revenue": 0}
+                pack_counts[pack_slug]["sales"] += 1
+                pack_counts[pack_slug]["revenue"] += sale.get("amountTotal", 0)
     
     packs = [
-        {"slug": slug, "leads": counts["leads"], "sales": counts["sales"]}
+        {
+            "slug": slug,
+            "leads": counts["leads"],
+            "sales": counts["sales"],
+            "revenue": counts.get("revenue", 0) / 100.0,  # Convert cents to dollars
+        }
         for slug, counts in pack_counts.items()
     ]
     
@@ -507,6 +605,57 @@ async def get_revenue_summary():
         packs=packs,
         note=None if total_leads > 0 else "Leads data structure is TBD. Summary not fully implemented.",
     )
+
+
+@app.post("/api/revenue/sales")
+async def record_sale(request: SaleRecordRequest):
+    """
+    Record a Stripe sale to revenue data.
+    
+    Called by Stripe webhook handler to track sales.
+    
+    Args:
+        request: Sale record with session ID, pack slug, customer info, and amount
+        
+    Returns:
+        Confirmation message
+    """
+    # Load existing sales or create new list
+    sales = []
+    if SALES_JSON.exists():
+        try:
+            with open(SALES_JSON, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                sales = data.get("sales", []) if isinstance(data, dict) else data
+        except (json.JSONDecodeError, FileNotFoundError):
+            sales = []
+    
+    # Create sale record
+    sale_record = {
+        "sessionId": request.sessionId,
+        "packSlug": request.packSlug,
+        "customerEmail": request.customerEmail,
+        "customerName": request.customerName,
+        "organization": request.organization,
+        "amountTotal": request.amountTotal,
+        "currency": request.currency,
+        "purchasedAt": datetime.utcnow().isoformat() + "Z",
+    }
+    
+    # Check if sale already exists (idempotent)
+    existing = next((s for s in sales if s.get("sessionId") == request.sessionId), None)
+    if existing:
+        return {"status": "already_recorded", "sale": existing}
+    
+    # Add to sales list
+    sales.append(sale_record)
+    
+    # Save to JSON file
+    SALES_JSON.parent.mkdir(parents=True, exist_ok=True)
+    with open(SALES_JSON, "w", encoding="utf-8") as f:
+        json.dump({"sales": sales, "lastUpdated": datetime.utcnow().isoformat() + "Z"}, f, indent=2)
+    
+    return {"status": "recorded", "sale": sale_record}
 
 
 @app.get("/api/revenue/leads")

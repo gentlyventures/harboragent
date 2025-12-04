@@ -46,23 +46,21 @@ node_modules/
 !/docs/GENESIS_PACK_DELIVERY.md
 !/docs/RELEASE_SETUP.md
 !/docs/CLOUDFLARE_API_TOKEN_SETUP.md
+!/docs/deployment/
+!/docs/archive/
 
-# Internal audit and summary files
-/FIDELITY_AUDIT_SUMMARY.md
-/FRONTEND_README.md
-/SECRETS_SETUP_SUMMARY.md
-/REPO_PUBLIC_AUDIT.md
-/BRAND_AUDIT_CONTENT.md
-/REFACTOR_SUMMARY.md
-/REFACTOR_COMPLETE_SUMMARY.md
+# Pack creation process (internal)
+/pack-process/
 
-# Internal setup and integration files
-/POSTMARK_INTEGRATION_SUMMARY.md
-/STRIPE_CLOUDFLARE_AUDIT.md
-/STRIPE_WEBHOOK_SETUP.md
-/WEBHOOK_SETUP_COMPLETE.md
+# Revenue tracking (internal)
+/revenue/
+
+# Internal audit and summary files (moved to docs/archive)
+/docs/archive/
+
+# Internal setup and integration files (moved to docs/deployment)
+/docs/deployment/
 /setup-stripe-webhook.sh
-/WEBHOOK_SETUP_COMPLETE.md
 
 # OS files
 .DS_Store

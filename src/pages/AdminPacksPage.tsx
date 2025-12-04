@@ -193,29 +193,41 @@ function PackCard({ pack, onRunResearch }: PackCardProps) {
       {/* Expanded Content */}
       {isExpanded && (
         <div className="border-t border-gray-200 p-6 space-y-6">
-          {/* Run Research Button */}
-          <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div>
-              <h4 className="text-sm font-semibold text-blue-900 mb-1">Research Pipeline</h4>
-              <p className="text-xs text-blue-700">
-                Run the complete research pipeline (validation → scoring → deep dive)
-              </p>
+          {/* Run Research Button - Only show for early-stage packs */}
+          {pack.currentStage === 'idea' || pack.currentStage === 'validation' || pack.currentStage === 'scoring' ? (
+            <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div>
+                <h4 className="text-sm font-semibold text-blue-900 mb-1">Initial Research Pipeline</h4>
+                <p className="text-xs text-blue-700">
+                  Run the complete research pipeline (validation → scoring → deep dive) for new packs
+                </p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleRunResearch()
+                }}
+                disabled={isRunningResearch}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isRunningResearch
+                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+              >
+                {isRunningResearch ? 'Running...' : 'Run Research Pipeline'}
+              </button>
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                handleRunResearch()
-              }}
-              disabled={isRunningResearch}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isRunningResearch
-                  ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              }`}
-            >
-              {isRunningResearch ? 'Running...' : 'Run Research Pipeline'}
-            </button>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div>
+                <h4 className="text-sm font-semibold text-gray-900 mb-1">Pack Updates</h4>
+                <p className="text-xs text-gray-600">
+                  Weekly automated checks for regulation changes, market updates, and user feedback are handled by the orchestrator cron job.
+                </p>
+              </div>
+              <span className="text-xs text-gray-500 italic">Automated</span>
+            </div>
+          )}
 
           {researchMessage && (
             <div
