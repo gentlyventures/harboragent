@@ -62,9 +62,6 @@ SALES_JSON = REVENUE_DATA_PATH / "sales.json"
 # Path to automations config
 AUTOMATIONS_JSON = Path(__file__).resolve().parent / "data" / "automations.json"
 
-# Sales JSON path (in revenue/data for consistency with revenue module)
-SALES_JSON = REVENUE_DATA_PATH / "sales.json"
-
 # Path to runs directory
 RUNS_DIR = Path(__file__).resolve().parent / "data" / "runs"
 
