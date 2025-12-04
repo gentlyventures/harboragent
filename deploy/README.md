@@ -232,6 +232,52 @@ The container serves HTTP on port 8000. Cloudflare handles TLS termination:
 - Requests to `https://api.harboragent.dev` are proxied to `http://<OVH_IP>:8000`
 - No SSL certificates needed in the container
 
+## Weekly Pack Updates (Cron Job)
+
+The Harbor Ops API includes an endpoint to check for updates to published packs (regulation changes, market trends, etc.). Set up a weekly cron job to automatically check all published packs.
+
+### Setup Cron Job on OVH Server
+
+SSH into the server and add a cron job:
+
+```bash
+ssh -i .ssh/ovh-rocketchat_ed25519 ubuntu@40.160.4.30
+crontab -e
+```
+
+Add this line to run weekly checks every Monday at 9 AM UTC:
+
+```cron
+0 9 * * 1 curl -X POST https://api.harboragent.dev/api/packs/genesis-mission/check-updates -H "Content-Type: application/json" > /tmp/pack-updates.log 2>&1
+```
+
+Or use a script to check all published packs:
+
+```bash
+# Create script
+cat > /opt/harbor-ops/scripts/weekly-updates.sh << 'EOF'
+#!/bin/bash
+API_URL="https://api.harboragent.dev"
+for pack in genesis-mission tax-assist; do
+  curl -X POST "${API_URL}/api/packs/${pack}/check-updates" \
+    -H "Content-Type: application/json" \
+    >> /tmp/pack-updates.log 2>&1
+  echo "" >> /tmp/pack-updates.log
+done
+EOF
+
+chmod +x /opt/harbor-ops/scripts/weekly-updates.sh
+
+# Add to crontab
+(crontab -l 2>/dev/null; echo "0 9 * * 1 /opt/harbor-ops/scripts/weekly-updates.sh") | crontab -
+```
+
+**Note:** The update check endpoint is currently a placeholder. Implement actual checks for:
+- Regulation/standard changes (monitor official sources)
+- Market trends (news APIs, industry reports)
+- User feedback aggregation
+- Competitive landscape shifts
+
 ## Troubleshooting
 
 ### Container won't start
