@@ -754,6 +754,42 @@ async def get_revenue_summary():
     )
 
 
+@app.get("/api/revenue/sales")
+async def list_sales(limit: Optional[int] = 100, packSlug: Optional[str] = None):
+    """
+    List sales records.
+    
+    Args:
+        limit: Maximum number of sales to return
+        packSlug: Optional filter by pack slug
+        
+    Returns:
+        List of sales records
+    """
+    if not SALES_JSON.exists():
+        return {"sales": []}
+    
+    try:
+        with open(SALES_JSON, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            sales = data.get("sales", [])
+    except (json.JSONDecodeError, FileNotFoundError):
+        return {"sales": []}
+    
+    # Filter by pack if specified
+    if packSlug:
+        sales = [s for s in sales if s.get("packSlug") == packSlug]
+    
+    # Sort by most recent first
+    sales.sort(key=lambda x: x.get("purchasedAt", ""), reverse=True)
+    
+    # Apply limit
+    if limit:
+        sales = sales[:limit]
+    
+    return {"sales": sales, "total": len(sales)}
+
+
 @app.post("/api/revenue/sales")
 async def record_sale(request: SaleRecordRequest):
     """
