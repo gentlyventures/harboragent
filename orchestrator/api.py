@@ -9,13 +9,15 @@ Provides REST endpoints for:
 """
 
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from openai import OpenAI
 
 from orchestrator.graph import run_pack_research
 from orchestrator.config import (
@@ -23,8 +25,12 @@ from orchestrator.config import (
     save_packs_json,
     get_pack_lifecycle,
     update_pack_lifecycle,
+    OPENAI_API_KEY,
 )
 from orchestrator.state import save_run_state
+
+# Initialize OpenAI client
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 app = FastAPI(title="Harbor Ops API", version="0.1.0")
 
@@ -589,4 +595,68 @@ async def root():
 async def health():
     """Health check endpoint."""
     return {"status": "healthy"}
+
+
+# ============================================================================
+# Audio Transcription Endpoint
+# ============================================================================
+
+
+@app.post("/api/transcribe")
+async def transcribe_audio(audio_file: UploadFile = File(...)):
+    """
+    Transcribe audio using OpenAI Whisper API.
+    
+    Accepts audio files (mp3, mp4, mpeg, mpga, m4a, wav, webm) and returns
+    transcribed text using OpenAI's Whisper model.
+    
+    Args:
+        audio_file: Audio file to transcribe
+        
+    Returns:
+        JSON with transcribed text
+        
+    Raises:
+        400: If file format is not supported
+        500: If transcription fails
+    """
+    # Whisper supports: mp3, mp4, mpeg, mpga, m4a, wav, webm
+    # We'll be lenient with content-type since browsers vary
+    # and let OpenAI handle format validation
+    
+    try:
+        # Read audio file content
+        audio_content = await audio_file.read()
+        
+        # Create a temporary file-like object for OpenAI
+        import io
+        
+        # OpenAI SDK expects a file-like object with a name attribute
+        # Create a BytesIO object and set the name
+        audio_file_obj = io.BytesIO(audio_content)
+        # Determine file extension from content type or filename
+        filename = audio_file.filename or "audio.webm"
+        if not filename.endswith(('.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm')):
+            # Default to webm if extension unclear
+            filename = "audio.webm"
+        audio_file_obj.name = filename
+        
+        # Transcribe using OpenAI Whisper
+        transcript = openai_client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file_obj,
+            language="en",  # Optional: specify language for better accuracy
+        )
+        
+        return {
+            "text": transcript.text,
+            "language": getattr(transcript, "language", "en"),
+        }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Transcription failed: {str(e)}"
+        )
 
